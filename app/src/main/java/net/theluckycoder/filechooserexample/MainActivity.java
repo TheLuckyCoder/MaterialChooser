@@ -37,8 +37,9 @@ public class MainActivity extends AppCompatActivity {
     public void startFileChooser(View view) {
         new FileChooser(this, mRequestCode)
                 .setRootPath(Environment.getExternalStorageDirectory().getAbsolutePath())
+                .setStartPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/")
                 .showHiddenFiles(true)
-                .setFileExtension("jar")
+                .setFileExtension("txt")
                 .start();
 
         /* Second Method:
@@ -57,12 +58,12 @@ public class MainActivity extends AppCompatActivity {
             filePathTxt.setText(data.getStringExtra(Args.RESULT_FILE_PATH));
     }
 
-    public boolean checkPermission() {
+    private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         return result != PackageManager.PERMISSION_GRANTED;
     }
 
-    public void requestPermission() {
+    private void requestPermission() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
 

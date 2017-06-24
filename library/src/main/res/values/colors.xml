@@ -2,6 +2,5 @@
 <resources>
     <color name="colorPrimary">#29b6f6</color>
     <color name="colorPrimaryDark">#0086c3</color>
-    <color name="colorFolders">#d500f9</color>
-    <color name="colorFiles">#d500f9</color>
+    <color name="colorFiles">#FFAB00</color>
 </resources>

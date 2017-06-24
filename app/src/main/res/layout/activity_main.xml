@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="startFileChooser"
-        android:text="Start File Chooser" />
+        android:text="@string/start_file_chooser" />
 
     <TextView
         android:id="@+id/filePath"

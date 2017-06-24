@@ -30,7 +30,7 @@ public class FileChooser {
     /**
      * Set the start directory of the picker
      *
-     * @param startPath
+     * @param startPath where the user starts
      */
     public FileChooser setStartPath(String startPath) {
         mStartPath = startPath;
@@ -59,7 +59,7 @@ public class FileChooser {
     }
 
     /**
-     * Start the file picker activity
+     * Start the file chooser activity
      *
      */
     public void start() {
