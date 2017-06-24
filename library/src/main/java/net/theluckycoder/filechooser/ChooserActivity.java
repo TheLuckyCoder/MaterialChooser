@@ -16,6 +16,13 @@ import java.util.List;
 
 public class ChooserActivity extends AppCompatActivity {
 
+    public static final String ROOT_DIR_PATH = "rootDirPath";
+    public static final String START_DIR_PATH = "startDirPath";
+    public static final String FILE_EXTENSION = "fileExtension";
+    public static final String SHOW_HIDDEN = "showHiddenFiles";
+
+    public static final String RESULT_FILE_PATH = "resultFilePath";
+
     private ListView listView;
     private FileArrayAdapter adapter;
     private String rootDirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -48,10 +55,10 @@ public class ChooserActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        rootDirPath = getExtraString(intent, Args.ROOT_DIR_PATH, rootDirPath);
-        currentDir = new File(getExtraString(intent, Args.START_DIR_PATH, rootDirPath));
-        showHiddenFiles = intent.getBooleanExtra(Args.SHOW_HIDDEN, false);
-        fileExtension = getExtraString(intent, Args.FILE_EXTENSION, "");
+        rootDirPath = getExtraString(intent, ChooserActivity.ROOT_DIR_PATH, rootDirPath);
+        currentDir = new File(getExtraString(intent, ChooserActivity.START_DIR_PATH, rootDirPath));
+        showHiddenFiles = intent.getBooleanExtra(ChooserActivity.SHOW_HIDDEN, false);
+        fileExtension = getExtraString(intent, ChooserActivity.FILE_EXTENSION, "");
         load(currentDir);
     }
 
@@ -151,7 +158,7 @@ public class ChooserActivity extends AppCompatActivity {
 
     private void onFileClick(Option option) {
         Intent data = new Intent();
-        data.putExtra(Args.RESULT_FILE_PATH, option.getPath());
+        data.putExtra(ChooserActivity.RESULT_FILE_PATH, option.getPath());
         setResult(RESULT_OK, data);
         finish();
     }

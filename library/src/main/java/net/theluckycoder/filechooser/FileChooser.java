@@ -65,12 +65,12 @@ public class FileChooser {
     public void start() {
         Intent intent = new Intent(mActivity, ChooserActivity.class);
         if (mRootPath != null)
-            intent.putExtra(Args.ROOT_DIR_PATH, mRootPath);
+            intent.putExtra(ChooserActivity.ROOT_DIR_PATH, mRootPath);
         if (mStartPath != null)
-            intent.putExtra(Args.START_DIR_PATH, mStartPath);
+            intent.putExtra(ChooserActivity.START_DIR_PATH, mStartPath);
         if (mFileExtension != null)
-            intent.putExtra(Args.FILE_EXTENSION, mFileExtension);
-        intent.putExtra(Args.SHOW_HIDDEN, mShowHiddenFiles);
+            intent.putExtra(ChooserActivity.FILE_EXTENSION, mFileExtension);
+        intent.putExtra(ChooserActivity.SHOW_HIDDEN, mShowHiddenFiles);
 
         mActivity.startActivityForResult(intent, mRequestCode);
     }
