@@ -17,6 +17,10 @@ dependencies {
 }
 ```
 
+## SDK
+This library is built using Build Tools **26.0.0**, requires at least SDK Version **14** and targets Version **26**.
+It also uses the AppCompat Libray **26.0.0-beta2**.
+
 ## How to use
 
 Open File Picker
@@ -47,7 +51,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
-### Documentation
+## Documentation
 
 Specify the activity and the request code
 ```java
@@ -82,9 +86,9 @@ Start the file chooser activity.
 void start();
 ```
 
-### Customize the look
+## Customize the look
 
-If you want to change any color of the File Chooser, just override one of these colors in 
+If you want to change any color of the File Chooser, just redefine one of these colors in your own project:
 ```xml
 <!-- Default Colors -->
 <color name="colorPrimary">#29b6f6</color> <!-- Main App Color -->
@@ -92,6 +96,6 @@ If you want to change any color of the File Chooser, just override one of these 
 <color name="colorFiles">#d500f9</color> <!-- Folders and Files Icon Color -->
 ```
 
-### License
+## License
 
 Apache License 2.0

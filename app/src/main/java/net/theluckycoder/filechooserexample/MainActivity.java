@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import net.theluckycoder.filechooser.ChooserActivity;
 import net.theluckycoder.filechooser.FileChooser;
 
 public class MainActivity extends AppCompatActivity {
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == mRequestCode && resultCode == RESULT_OK)
-            filePathTxt.setText(data.getStringExtra(Args.RESULT_FILE_PATH));
+            filePathTxt.setText(data.getStringExtra(ChooserActivity.RESULT_FILE_PATH));
     }
 
     private boolean checkPermission() {
