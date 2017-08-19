@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import net.theluckycoder.filechooser.ChooserActivity;
+import net.theluckycoder.filechooser.Chooser;
 import net.theluckycoder.filechooser.FileChooser;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
         filePathTxt = findViewById(R.id.filePath);
 
         // Check for Storage Permission of Android 6 and above
-        if (checkPermission()) requestPermission();
+        if (checkPermission())
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
 
 
@@ -42,29 +43,29 @@ public class MainActivity extends AppCompatActivity {
                 .setFileExtension("txt")
                 .start();
 
-        /* Second Method:
+        // Second Method
+        /*
         Intent intent = new Intent(this, ChooserActivity.class);
-        intent.putExtra(Args.ROOT_DIR_PATH, Environment.getExternalStorageDirectory().getAbsolutePath());
-        intent.putExtra(Args.SHOW_HIDDEN, true);
+        intent.putExtra(ChooserActivity.Companion.getRootDirName(), Environment.getExternalStorageDirectory().getAbsolutePath());
+        intent.putExtra(ChooserActivity.Companion.getShowHiddenName(), true);
         startActivityForResult(intent, mRequestCode);
         */
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == mRequestCode && resultCode == RESULT_OK)
-            filePathTxt.setText(data.getStringExtra(ChooserActivity.RESULT_FILE_PATH));
+        if (requestCode == mRequestCode && resultCode == RESULT_OK) {
+            String filePath = data.getStringExtra(Chooser.resultFilePath);
+            filePathTxt.setText(filePath);
+        }
     }
 
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         return result != PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
 
     @Override

@@ -4,8 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <application
-        android:supportsRtl="true">
+    <application>
         <activity
             android:name=".ChooserActivity"
             android:theme="@style/FileChooserTheme"/>
