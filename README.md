@@ -1,40 +1,42 @@
-# File Chooser
+# Material File Chooser
 
-A Material-Designed File Chooser Library for Android.
+A Material-Designed File Chooser Library for Android written in Kotlin.
+
+## SDK
+This library is built using Build Tools **26.0.1** and Kotlin version **1.1.4**, requires at least SDK Version **14** and targets SDK Version **26**.
+It also uses the AppCompat Library version **26.0.1** to maintain backwards compatibility.
+
+You will need Android Studio 3.0 or newer to build this project.
 
 ## How to add to your project
 
-Copy the library module to your main project folder
+Copy the filechooser module to your main project folder
 
 Add this line to your settings.gradle file:
 ```gradle
-include ':library'
+include ':filechooser'
 ```
 Then make sure your build.gradle file contains this:
 ```gradle
 dependencies {
-    compile project(':library')
+    implementation project(':filechooser')
 }
 ```
-
-## SDK
-This library is built using Build Tools **26.0.0**, requires at least SDK Version **14** and targets Version **26**.
-It also uses the AppCompat Libray **26.0.0-beta2**.
 
 ## How to use
 
 Open File Picker
 ```java
-new FileChooser(this, 1)
+new FileChooser(this, 10)
                 .showHiddenFiles(true)
                 .setFileExtension("txt")
                 .start();
 ```
-or
+or you can you Intents
 ```java
 Intent intent = new Intent(this, ChooserActivity.class);
-intent.putExtra(Args.SHOW_HIDDEN, true);
-intent.putExtra(Args.FILE_EXTENSION, "txt);
+intent.putExtra(Chooser.showHiddenFiles, true);
+intent.putExtra(Chooser.fileExtension, "txt");
 startActivityForResult(intent, 1);
 ```
 
@@ -44,8 +46,8 @@ Override onActivityResult:
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
-    if (requestCode == 1 && resultCode == RESULT_OK) {
-        String filePath = data.getStringExtra(Args.RESULT_FILE_PATH);
+    if (requestCode == 10 && resultCode == RESULT_OK) {
+        String filePath = data.getStringExtra(Chooser.resultFilePath);
         // Do something with the file
     }
 }
@@ -65,12 +67,12 @@ FileChooser setRootPath(String rootPath);
 ```
 
 Set the start directory of the picker.
-Default: Root Path
+Default: The value of the root path
 ```java
 FileChooser setStartPath(String startPath);
 ```
 Filter files by extension.
-Ignore all files taht don't have this extension.
+Ignore all files that don't have this extension.
 ```java
 FileChooser setStartPath(String startPath);
 ```
@@ -98,4 +100,4 @@ If you want to change any color of the File Chooser, just redefine one of these 
 
 ## License
 
-Apache License 2.0
+This project is licensed under the Apache License 2.0
