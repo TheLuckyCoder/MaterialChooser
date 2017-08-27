@@ -1,7 +1,6 @@
 package net.theluckycoder.filechooser
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
@@ -12,15 +11,14 @@ import java.io.File
 import java.util.*
 
 
-
 class ChooserActivity : AppCompatActivity() {
 
-    private lateinit var listView: ListView
     private var adapter: FileArrayAdapter? = null
+    private var showHiddenFiles = false
     private lateinit var rootDirPath: String
     private lateinit var currentDir: File
-    private var showHiddenFiles = false
     private lateinit var fileExtension: String
+    private lateinit var listView: ListView
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +28,7 @@ class ChooserActivity : AppCompatActivity() {
 
         listView = findViewById(R.id.list)
         listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            val option = adapter!!.getItem(position)
+            val option = adapter?.getItem(position)
             if (option != null) {
                 if (option.isFolder) {
                     currentDir = File(option.path)
@@ -42,10 +40,12 @@ class ChooserActivity : AppCompatActivity() {
 
         val intent = intent
 
-        rootDirPath = getExtraString(intent, Chooser.rootDirPath, rootDirPath)
-        currentDir = File(getExtraString(intent, Chooser.startDirPath, rootDirPath))
-        showHiddenFiles = intent.getBooleanExtra(Chooser.showHiddenFiles, false)
-        fileExtension = getExtraString(intent, Chooser.fileExtension, "")
+        rootDirPath = getExtraString(intent, FileChooser.ROOT_DIR_PATH, Environment.getExternalStorageDirectory().absolutePath)
+        currentDir = File(getExtraString(intent, FileChooser.START_DIR_PATH, rootDirPath))
+        showHiddenFiles = intent.getBooleanExtra(FileChooser.SHOW_HIDDEN_FILES, false)
+        fileExtension = getExtraString(intent, FileChooser.FILE_EXTENSION, "")
+
+        currentDir.mkdirs()
         load(currentDir)
     }
 
@@ -79,10 +79,8 @@ class ChooserActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> onBackPressed()
-            else -> return super.onOptionsItemSelected(item)
-        }
+        if (item.itemId == android.R.id.home)
+            onBackPressed()
         return super.onOptionsItemSelected(item)
     }
 
@@ -121,25 +119,19 @@ class ChooserActivity : AppCompatActivity() {
             e.printStackTrace()
         }
 
-        if (Build.VERSION.SDK_INT <= 25) {
-            Collections.sort(dirsArray)
-            Collections.sort(filesArray)
-        } else {
-            dirsArray.sort()
-            filesArray.sort()
-        }
-
+        Collections.sort(dirsArray)
+        Collections.sort(filesArray)
 
         dirsArray.addAll(filesArray)
         if (!file.absolutePath.equals(Environment.getExternalStorageDirectory().absolutePath, ignoreCase = true))
             dirsArray.add(0, Option("Parent Directory", file.parent, true))
-        adapter = FileArrayAdapter(this, R.layout.file_view, dirsArray)
+        adapter = FileArrayAdapter(this, R.layout.item_file, dirsArray)
         listView.adapter = adapter
     }
 
     private fun onFileClick(option: Option) {
         val data = Intent()
-        data.putExtra(Chooser.resultFilePath, option.path)
+        data.putExtra(FileChooser.RESULT_FILE_PATH, option.path)
         setResult(RESULT_OK, data)
         finish()
     }

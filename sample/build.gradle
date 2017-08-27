@@ -20,4 +20,5 @@ android {
 
 dependencies {
     implementation project(':filechooser')
+    implementation 'com.android.support:appcompat-v7:26.0.1'
 }

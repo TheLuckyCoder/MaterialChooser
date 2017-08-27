@@ -3,7 +3,7 @@
 A Material-Designed File Chooser Library for Android written in Kotlin.
 
 ## SDK
-This library is built using Build Tools **26.0.1** and Kotlin version **1.1.4**, requires at least SDK Version **14** and targets SDK Version **26**.
+This library is built using Build Tools **26.0.1** and Kotlin version **1.1.4-2**, requires at least SDK Version **14** and targets SDK Version **26**.
 It also uses the AppCompat Library version **26.0.1** to maintain backwards compatibility.
 
 You will need Android Studio 3.0 or newer to build this project.
@@ -35,9 +35,9 @@ new FileChooser(this, 10)
 or you can you Intents
 ```java
 Intent intent = new Intent(this, ChooserActivity.class);
-intent.putExtra(Chooser.showHiddenFiles, true);
-intent.putExtra(Chooser.fileExtension, "txt");
-startActivityForResult(intent, 1);
+intent.putExtra(FileChooser.SHOW_HIDDEN_FILES, true);
+intent.putExtra(FileChooser.RESULT_FILE_PATH, "txt");
+startActivityForResult(intent, 10);
 ```
 
 Override onActivityResult:
@@ -47,7 +47,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
     if (requestCode == 10 && resultCode == RESULT_OK) {
-        String filePath = data.getStringExtra(Chooser.resultFilePath);
+        String filePath = data.getStringExtra(FileChooser.resultFilePath);
         // Do something with the file
     }
 }
