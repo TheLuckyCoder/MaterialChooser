@@ -32,7 +32,7 @@ new Chooser(this, 10)
                 .setFileExtension("txt")
                 .start();
 ```
-or you can you Intents
+or you can use Intents
 ```java
 Intent intent = new Intent(this, ChooserActivity.class);
 intent.putExtra(Chooser.SHOW_HIDDEN_FILES, true);
@@ -64,7 +64,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 ## Documentation
 
-You can find all methods documented in the Chooser class under the filechooser module
+You can find all the usable methods documented over [here](https://github.com/TheLuckyCoder/MaterialChooser/blob/kotlin/filechooser/src/main/java/net/theluckycoder/filechooser/Chooser.kt
 
 ## Customize
 
