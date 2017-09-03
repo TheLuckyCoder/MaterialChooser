@@ -4,28 +4,40 @@ import android.app.Activity
 import android.content.Intent
 
 
-class FileChooser(private val activity: Activity, private val requestCode: Int) {
+class Chooser(private val activity: Activity, private val requestCode: Int) {
 
     companion object {
+        @JvmField val SELECT_FILE = "selectFile"
         @JvmField val ROOT_DIR_PATH = "rootDirPath"
         @JvmField val START_DIR_PATH = "startDirPath"
         @JvmField val FILE_EXTENSION = "fileExtension"
         @JvmField val SHOW_HIDDEN_FILES = "showHiddenFiles"
 
-        @JvmField val RESULT_FILE_PATH = "resultFilePath"
+        @JvmField val RESULT_PATH = "resultPath"
     }
 
+    private var mSelectFile: Boolean = true
     private var mRootPath: String? = null
     private var mStartPath: String? = null
-    private var mFileExtension: String? = null
+    private var mFileExtension: String = ""
     private var mShowHiddenFiles = false
+
+    /**
+     * Select a file or a folder
+     *
+     * @param selectFile prompt the user to select a file
+     */
+    fun setSelectFile(selectFile: Boolean): Chooser {
+        mSelectFile = selectFile
+        return this
+    }
 
     /**
      * Set the root directory of the picker
      *
      * @param rootPath the user can't go any higher than this
      */
-    fun setRootPath(rootPath: String): FileChooser {
+    fun setRootPath(rootPath: String): Chooser {
         mRootPath = rootPath
         return this
     }
@@ -35,7 +47,7 @@ class FileChooser(private val activity: Activity, private val requestCode: Int) 
      *
      * @param startPath where the user starts
      */
-    fun setStartPath(startPath: String): FileChooser {
+    fun setStartPath(startPath: String): Chooser {
         mStartPath = startPath
         return this
     }
@@ -46,7 +58,7 @@ class FileChooser(private val activity: Activity, private val requestCode: Int) 
      * @param extension file extension in string format
      * *                  Example : "txt"
      */
-    fun setFileExtension(extension: String): FileChooser {
+    fun setFileExtension(extension: String): Chooser {
         mFileExtension = extension
         return this
     }
@@ -56,7 +68,7 @@ class FileChooser(private val activity: Activity, private val requestCode: Int) 
      *
      * @param show show files and folders that begin with '.'
      */
-    fun showHiddenFiles(show: Boolean): FileChooser {
+    fun showHiddenFiles(show: Boolean): Chooser {
         mShowHiddenFiles = show
         return this
     }
@@ -71,9 +83,9 @@ class FileChooser(private val activity: Activity, private val requestCode: Int) 
             intent.putExtra(ROOT_DIR_PATH, mRootPath)
         if (mStartPath != null)
             intent.putExtra(START_DIR_PATH, mStartPath)
-        if (mFileExtension != null)
-            intent.putExtra(FILE_EXTENSION, mFileExtension)
+        intent.putExtra(FILE_EXTENSION, mFileExtension)
         intent.putExtra(SHOW_HIDDEN_FILES, mShowHiddenFiles)
+        intent.putExtra(SELECT_FILE, mSelectFile)
 
         activity.startActivityForResult(intent, requestCode)
     }

@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import net.theluckycoder.filechooser.FileChooser;
+import net.theluckycoder.filechooser.Chooser;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void startFileChooser(View view) {
-        new FileChooser(this, REQUEST_CODE)
+        new Chooser(this, REQUEST_CODE)
                 .setRootPath(Environment.getExternalStorageDirectory().getAbsolutePath())
                 .setStartPath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/")
                 .showHiddenFiles(true)
@@ -46,12 +46,12 @@ public class MainActivity extends AppCompatActivity {
         // Second Method
         /*
         Intent intent = new Intent(this, ChooserActivity.class);
-        intent.putExtra(FileChooser.ROOT_DIR_PATH, Environment.getExternalStorageDirectory().getAbsolutePath());
-        intent.putExtra(FileChooser.START_DIR_PATH, Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/");
-        intent.putExtra(FileChooser.SHOW_HIDDEN_FILES, true);
+        intent.putExtra(Chooser.SELECT_FILE, false);
+        intent.putExtra(Chooser.ROOT_DIR_PATH, Environment.getExternalStorageDirectory().getAbsolutePath());
+        intent.putExtra(Chooser.START_DIR_PATH, Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/");
+        intent.putExtra(Chooser.SHOW_HIDDEN_FILES, true);
         startActivityForResult(intent, REQUEST_CODE);
         */
-
     }
 
     @Override
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            String filePath = data.getStringExtra(FileChooser.RESULT_FILE_PATH);
+            String filePath = data.getStringExtra(Chooser.RESULT_PATH);
             filePathTxt.setText(filePath);
         }
     }

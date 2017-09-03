@@ -9,9 +9,9 @@ import android.widget.ImageView
 import android.widget.TextView
 
 
-internal class FileArrayAdapter(context: Context, private val id: Int, private val items: List<Option>) : ArrayAdapter<Option>(context, id, items) {
+internal class FilesAdapter(context: Context, private val id: Int, private val items: List<Option>) : ArrayAdapter<Option>(context, id, items) {
 
-    override fun getItem(i: Int): Option? {
+    override fun getItem(i: Int): Option {
         return items[i]
     }
 
@@ -25,11 +25,14 @@ internal class FileArrayAdapter(context: Context, private val id: Int, private v
 
         val option = items[position]
 
-        val nameTxt = view.findViewById<TextView>(R.id.text_name)
-        val iconImg = view.findViewById<ImageView>(R.id.image_icon)
+        val nameTxt: TextView = view.findViewById(R.id.text_name)
+        val iconImg: ImageView = view.findViewById(R.id.image_icon)
 
         nameTxt.text = option.name
-        if (option.isFolder)
+
+        if (option.isFolder && option.name == "Parent Directory")
+            iconImg.setImageResource(R.drawable.ic_up)
+        else if (option.isFolder)
             iconImg.setImageResource(R.drawable.ic_folder)
         else
             iconImg.setImageResource(R.drawable.ic_file)
