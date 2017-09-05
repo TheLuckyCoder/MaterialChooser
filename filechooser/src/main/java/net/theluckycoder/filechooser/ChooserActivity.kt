@@ -13,11 +13,12 @@ import android.widget.ListView
 import java.io.File
 import java.util.*
 
+
 @RequiresApi
 class ChooserActivity : AppCompatActivity() {
 
     private var showHiddenFiles = false
-    private var selectFile = true
+    private var mIsFileChooser = true
     private lateinit var rootDirPath: String
     private lateinit var currentDir: File
     private lateinit var fileExtension: String
@@ -36,10 +37,7 @@ class ChooserActivity : AppCompatActivity() {
         currentDir = File(getExtraString(intent, Chooser.START_DIR_PATH, rootDirPath))
         fileExtension = getExtraString(intent, Chooser.FILE_EXTENSION, "")
         showHiddenFiles = intent.getBooleanExtra(Chooser.SHOW_HIDDEN_FILES, false)
-        selectFile = intent.getBooleanExtra(Chooser.SELECT_FILE, true)
-
-        currentDir.mkdirs()
-        load(currentDir)
+        mIsFileChooser = intent.getBooleanExtra(Chooser.CHOOSER_TYPE, true)
 
         listView = findViewById(R.id.list)
         listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
@@ -51,11 +49,14 @@ class ChooserActivity : AppCompatActivity() {
                 onSelect(option.name)
         }
 
-        if (!selectFile) {
+        if (!mIsFileChooser) {
             val selectFolder: Button = findViewById(R.id.button_select_folder)
             selectFolder.visibility = View.VISIBLE
             selectFolder.setOnClickListener({ onSelect(currentDir.absolutePath + "/") })
         }
+
+        currentDir.mkdirs()
+        load(currentDir)
     }
 
     override fun onBackPressed() {
@@ -73,7 +74,7 @@ class ChooserActivity : AppCompatActivity() {
         outState.putString("currentPath", currentDir.absolutePath)
         outState.putString(Chooser.FILE_EXTENSION, fileExtension)
         outState.putBoolean(Chooser.SHOW_HIDDEN_FILES, showHiddenFiles)
-        outState.putBoolean(Chooser.SELECT_FILE, selectFile)
+        outState.putBoolean("isFileChooser", mIsFileChooser)
     }
 
     public override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -81,7 +82,7 @@ class ChooserActivity : AppCompatActivity() {
         val currentPath = savedInstanceState.getString("currentPath")
         val extension = savedInstanceState.getString(Chooser.FILE_EXTENSION)
         showHiddenFiles = savedInstanceState.getBoolean(Chooser.SHOW_HIDDEN_FILES, false)
-        selectFile = savedInstanceState.getBoolean(Chooser.SELECT_FILE, true)
+        mIsFileChooser = savedInstanceState.getBoolean("isFileChooser", true)
 
         currentDir = File(currentPath)
         fileExtension = extension
@@ -104,39 +105,39 @@ class ChooserActivity : AppCompatActivity() {
     private fun load(file: File) {
         val dirs = file.listFiles()
         title = file.absolutePath.replace(Environment.getExternalStorageDirectory().absolutePath, getString(R.string.file_chooser_device))
-        val dirsArray = ArrayList<Option>()
-        val filesArray = ArrayList<Option>()
+        val dirsArray = ArrayList<FileItem>()
+        val filesArray = ArrayList<FileItem>()
 
         for (ff in dirs) {
             val fName = ff.name
             if (ff.canRead()) {
                 if (showHiddenFiles) {
                     when {
-                        ff.isDirectory -> dirsArray.add(Option(fName, ff.absolutePath, true))
-                        fileExtension != "" && ff.name.substring(fName.lastIndexOf(".") + 1, fName.length) == fileExtension -> filesArray.add(Option(fName, ff.absolutePath, false))
-                        fileExtension == "" -> filesArray.add(Option(fName, ff.absolutePath, false))
+                        ff.isDirectory -> dirsArray.add(FileItem(fName, ff.absolutePath, true))
+                        fileExtension != "" && ff.name.substring(fName.lastIndexOf(".") + 1, fName.length) == fileExtension -> filesArray.add(FileItem(fName, ff.absolutePath, false))
+                        fileExtension == "" -> filesArray.add(FileItem(fName, ff.absolutePath, false))
                     }
                 } else {
                     if (ff.name.substring(0, 1) != ".") {
                         when {
-                            ff.isDirectory -> dirsArray.add(Option(fName, ff.absolutePath, true))
-                            fileExtension != "" && ff.name.substring(fName.lastIndexOf(".") + 1, fName.length) == fileExtension -> filesArray.add(Option(fName, ff.absolutePath, false))
-                            fileExtension == "" -> filesArray.add(Option(fName, ff.absolutePath, false))
+                            ff.isDirectory -> dirsArray.add(FileItem(fName, ff.absolutePath, true))
+                            fileExtension != "" && ff.name.substring(fName.lastIndexOf(".") + 1, fName.length) == fileExtension -> filesArray.add(FileItem(fName, ff.absolutePath, false))
+                            fileExtension == "" -> filesArray.add(FileItem(fName, ff.absolutePath, false))
                         }
                     }
                 }
             }
         }
 
-        Collections.sort(dirsArray)
+        dirsArray.sortedBy { it.name }
 
-        if (selectFile) {
-            Collections.sort(filesArray)
+        if (mIsFileChooser) {
+            filesArray.sortedBy { it.name }
             dirsArray.addAll(filesArray)
         }
 
         if (file.absolutePath != Environment.getExternalStorageDirectory().absolutePath)
-            dirsArray.add(0, Option("Parent Directory", file.parent, true))
+            dirsArray.add(0, FileItem("Parent Directory", file.parent, true))
         adapter = FilesAdapter(this, R.layout.item_file, dirsArray)
         listView.adapter = adapter
     }

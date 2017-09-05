@@ -9,9 +9,9 @@ import android.widget.ImageView
 import android.widget.TextView
 
 
-internal class FilesAdapter(context: Context, private val id: Int, private val items: List<Option>) : ArrayAdapter<Option>(context, id, items) {
+internal class FilesAdapter(context: Context, private val id: Int, private val items: List<FileItem>) : ArrayAdapter<FileItem>(context, id, items) {
 
-    override fun getItem(i: Int): Option {
+    override fun getItem(i: Int): FileItem {
         return items[i]
     }
 

@@ -41,10 +41,10 @@ startActivityForResult(intent, 10);
 ```
 
 #### Open Folder Picker:
-It's the same as for the file picker but you need to add "setSelectFile(false)"
+It's the same as for the file picker but you need to add "setChooserType(false)"
 ```java
 new Chooser(this, 10)
-                .setSelectFile(false)
+                .setChooserType(false)
                 .start();
 ```
 
