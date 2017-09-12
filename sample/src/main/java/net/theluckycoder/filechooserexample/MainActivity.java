@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         // Second Method
         /*
         Intent intent = new Intent(this, ChooserActivity.class);
-        intent.putExtra(Chooser.SELECT_FILE, false);
+        intent.putExtra(Chooser.CHOOSER_TYPE, Chooser.FOLDER_CHOOSER);
         intent.putExtra(Chooser.ROOT_DIR_PATH, Environment.getExternalStorageDirectory().getAbsolutePath());
         intent.putExtra(Chooser.START_DIR_PATH, Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/");
         intent.putExtra(Chooser.SHOW_HIDDEN_FILES, true);

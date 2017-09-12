@@ -2,4 +2,5 @@
 <resources>
     <string name="file_chooser_device">Device</string>
     <string name="choose_folder">Choose Folder</string>
+    <string name="parent_directory">Parent Directory</string>
 </resources>

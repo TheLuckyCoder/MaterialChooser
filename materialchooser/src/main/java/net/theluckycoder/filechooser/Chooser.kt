@@ -2,7 +2,6 @@ package net.theluckycoder.filechooser
 
 import android.app.Activity
 import android.content.Intent
-import android.support.annotation.RequiresPermission
 
 
 class Chooser(private val activity: Activity, private val requestCode: Int) {
@@ -15,13 +14,12 @@ class Chooser(private val activity: Activity, private val requestCode: Int) {
         @JvmField val SHOW_HIDDEN_FILES = "showHiddenFiles"
 
         @JvmField val RESULT_PATH = "resultPath"
+
+        @JvmField val FILE_CHOOSER = 0
+        @JvmField val FOLDER_CHOOSER = 1
     }
 
-    enum class ChooserType {
-        FILE_CHOOSER, FOLDER_CHOOSER
-    }
-
-    private var mChooserType: ChooserType = ChooserType.FILE_CHOOSER
+    @ChooserType private var mChooserType = FILE_CHOOSER
     private var mRootPath: String? = null
     private var mStartPath: String? = null
     private var mFileExtension: String = ""
@@ -33,7 +31,7 @@ class Chooser(private val activity: Activity, private val requestCode: Int) {
      * @param chooserType select between file chooser or directory chooser
      * *                     Default: FILE_CHOOSER
      */
-    fun setChooserType(chooserType: ChooserType): Chooser {
+    fun setChooserType(@ChooserType chooserType: Int): Chooser {
         mChooserType = chooserType
         return this
     }
@@ -75,6 +73,7 @@ class Chooser(private val activity: Activity, private val requestCode: Int) {
      * Show or hide hidden files
      *
      * @param show show files and folders that begin with '.'
+     *                     Default: false
      */
     fun showHiddenFiles(show: Boolean): Chooser {
         mShowHiddenFiles = show
@@ -85,9 +84,9 @@ class Chooser(private val activity: Activity, private val requestCode: Int) {
      * Start the file chooser activity
      *
      */
-    @RequiresPermission(value = "android.permission.READ_EXTERNAL_STORAGE")
     fun start() {
         val intent = Intent(activity, ChooserActivity::class.java)
+
         if (mRootPath != null)
             intent.putExtra(ROOT_DIR_PATH, mRootPath)
         if (mStartPath != null)

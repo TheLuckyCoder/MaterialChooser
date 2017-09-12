@@ -2,11 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.theluckycoder.filechooser">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application>
         <activity
             android:name=".ChooserActivity"
-            android:theme="@style/FileChooserTheme"/>
+            android:theme="@style/FileChooserTheme"
+            android:configChanges="orientation|screenSize" />
     </application>
 </manifest>

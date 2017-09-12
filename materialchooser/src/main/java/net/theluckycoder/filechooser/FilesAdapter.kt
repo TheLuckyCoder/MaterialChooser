@@ -30,7 +30,7 @@ internal class FilesAdapter(context: Context, private val id: Int, private val i
 
         nameTxt.text = option.name
 
-        if (option.isFolder && option.name == "Parent Directory")
+        if (option.isFolder && option.name == context.getString(R.string.parent_directory))
             iconImg.setImageResource(R.drawable.ic_up)
         else if (option.isFolder)
             iconImg.setImageResource(R.drawable.ic_folder)
