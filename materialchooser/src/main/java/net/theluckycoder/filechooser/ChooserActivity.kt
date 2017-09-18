@@ -81,45 +81,46 @@ class ChooserActivity : AppCompatActivity() {
         return intent.getStringExtra(name) ?: defaultValue
     }
 
-    private fun load(file: File) {
-        val dirs = file.listFiles()
-        title = file.absolutePath.replace(Environment.getExternalStorageDirectory().absolutePath, getString(R.string.file_chooser_device))
-        val dirsArray = ArrayList<FileItem>()
-        val filesArray = ArrayList<FileItem>()
+    private fun load(currentDir: File) {
+        val listedAll: Array<File>? = currentDir.listFiles()
+        title = currentDir.absolutePath.replace(Environment.getExternalStorageDirectory().absolutePath, getString(R.string.file_chooser_device))
+        val dirsList = ArrayList<FileItem>()
+        val filesList = ArrayList<FileItem>()
 
-        if (dirs.isNotEmpty()) {
-            for (ff in dirs) {
-                val fName = ff.name
-                if (ff.canRead()) {
-                    if (showHiddenFiles) {
-                        when {
-                            ff.isDirectory -> dirsArray.add(FileItem(fName, ff.absolutePath, true))
-                            fileExtension != "" && ff.name.substring(fName.lastIndexOf(".") + 1, fName.length) == fileExtension -> filesArray.add(FileItem(fName, ff.absolutePath, false))
-                            fileExtension == "" -> filesArray.add(FileItem(fName, ff.absolutePath, false))
-                        }
-                    } else {
-                        if (ff.name.substring(0, 1) != ".") {
-                            when {
-                                ff.isDirectory -> dirsArray.add(FileItem(fName, ff.absolutePath, true))
-                                fileExtension != "" && ff.name.substring(fName.lastIndexOf(".") + 1, fName.length) == fileExtension -> filesArray.add(FileItem(fName, ff.absolutePath, false))
-                                fileExtension == "" -> filesArray.add(FileItem(fName, ff.absolutePath, false))
+        if (listedAll != null) {
+            if (listedAll.isNotEmpty()) {
+                listedAll.filter { it.canRead() }
+                        .forEach {
+                            if (showHiddenFiles) {
+                                when {
+                                    it.isDirectory -> dirsList.add(FileItem(it.name, it.absolutePath, true))
+                                    fileExtension != "" && it.extension == fileExtension -> filesList.add(FileItem(it.name, it.absolutePath, false))
+                                    fileExtension == "" -> filesList.add(FileItem(it.name, it.absolutePath, false))
+                                }
+                            } else {
+                                if (!it.startsWith(".")) {
+                                    when {
+                                        it.isDirectory -> dirsList.add(FileItem(it.name, it.absolutePath, true))
+                                        fileExtension != "" && it.extension == fileExtension -> filesList.add(FileItem(it.name, it.absolutePath, false))
+                                        fileExtension == "" -> filesList.add(FileItem(it.name, it.absolutePath, false))
+                                    }
+                                }
                             }
                         }
-                    }
-                }
             }
         }
 
-        dirsArray.sortedBy { it.name }
+        dirsList.sortedBy { it.name }
 
         if (isFileChooser) {
-            filesArray.sortedBy { it.name }
-            dirsArray.addAll(filesArray)
+            filesList.sortedBy { it.name }
+            dirsList.addAll(filesList)
         }
 
-        if (file.absolutePath != Environment.getExternalStorageDirectory().absolutePath)
-            dirsArray.add(0, FileItem(getString(R.string.parent_directory), file.parent, true))
-        adapter = FilesAdapter(this, R.layout.item_file, dirsArray)
+        if (currentDir.absolutePath != Environment.getExternalStorageDirectory().absolutePath)
+            dirsList.add(0, FileItem(getString(R.string.parent_directory), currentDir.parent, true))
+
+        adapter = FilesAdapter(this, dirsList)
         listView.adapter = adapter
     }
 

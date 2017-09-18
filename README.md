@@ -4,22 +4,22 @@ A lightweight Material-Designed File and Folder Chooser Library for Android writ
 
 ## SDK
 This library is built using Build Tools **26.0.1** and Kotlin version **1.1.4-3**, requires at least SDK Version **14** and targets SDK Version **26**.
-It also uses the AppCompat Library version **26.0.2** to maintain backwards compatibility.
+It also uses the AppCompat Library version **26.1.0** to maintain backwards compatibility.
 
 You will need Android Studio 3.0 or newer to build this project.
 
 ## How to add to your project
 
-Copy the Chooser module to your main project folder
+Copy the library module to your main project folder
 
 Add this line to your settings.gradle file:
 ```gradle
-include ':filechooser'
+include ':materialchooser'
 ```
 Then make sure your build.gradle file contains this:
 ```gradle
 dependencies {
-    implementation project(':filechooser')
+    implementation project(':materialchooser')
 }
 ```
 
@@ -41,10 +41,10 @@ startActivityForResult(intent, 10);
 ```
 
 #### Open Folder Picker:
-It's the same as for the file picker but you need to add "setChooserType(false)"
+It's the same as for the file picker but you need to add ```setChooserType(Chooser.FOLDER_CHOOSER)```
 ```java
 new Chooser(this, 10)
-                .setChooserType(false)
+                .setChooserType(Chooser.FOLDER_CHOOSER)
                 .start();
 ```
 

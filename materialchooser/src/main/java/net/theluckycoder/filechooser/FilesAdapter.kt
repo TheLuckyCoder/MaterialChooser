@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 
 
-internal class FilesAdapter(context: Context, private val id: Int, private val items: List<FileItem>) : ArrayAdapter<FileItem>(context, id, items) {
+internal class FilesAdapter(context: Context, private val items: List<FileItem>) : ArrayAdapter<FileItem>(context, R.layout.item_file, items) {
 
     override fun getItem(i: Int): FileItem {
         return items[i]
@@ -20,7 +20,7 @@ internal class FilesAdapter(context: Context, private val id: Int, private val i
             convertView
         } else {
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            inflater.inflate(id, null)
+            inflater.inflate(R.layout.item_file, null)
         }
 
         val option = items[position]
