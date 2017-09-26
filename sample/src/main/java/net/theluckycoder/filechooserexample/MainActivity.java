@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import net.theluckycoder.filechooser.Chooser;
+import net.theluckycoder.materialchooser.Chooser;
 
 
 public class MainActivity extends AppCompatActivity {

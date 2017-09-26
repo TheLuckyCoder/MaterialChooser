@@ -1,4 +1,4 @@
-package net.theluckycoder.filechooser
+package net.theluckycoder.materialchooser
 
 import android.content.Intent
 import android.os.Bundle
@@ -30,8 +30,6 @@ class ChooserActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chooser)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        val intent = intent
 
         rootDirPath = getExtraString(intent, Chooser.ROOT_DIR_PATH, Environment.getExternalStorageDirectory().absolutePath)
         currentDir = File(getExtraString(intent, Chooser.START_DIR_PATH, rootDirPath))
@@ -120,7 +118,7 @@ class ChooserActivity : AppCompatActivity() {
         if (currentDir.absolutePath != Environment.getExternalStorageDirectory().absolutePath)
             dirsList.add(0, FileItem(getString(R.string.parent_directory), currentDir.parent, true))
 
-        adapter = FilesAdapter(this, dirsList)
+        adapter = FilesAdapter(this, R.layout.item_file, dirsList)
         listView.adapter = adapter
     }
 

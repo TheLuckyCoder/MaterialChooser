@@ -1,4 +1,4 @@
-package net.theluckycoder.filechooser;
+package net.theluckycoder.materialchooser;
 
 import android.support.annotation.IntDef;
 

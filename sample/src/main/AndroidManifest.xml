@@ -3,8 +3,6 @@
     package="net.theluckycoder.filechooserexample">
 
     <application
-        android:allowBackup="false"
-        android:fullBackupContent="false"
         android:icon="@android:mipmap/sym_def_app_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"

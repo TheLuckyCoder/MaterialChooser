@@ -1,4 +1,4 @@
-package net.theluckycoder.filechooser
+package net.theluckycoder.materialchooser
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,19 +9,14 @@ import android.widget.ImageView
 import android.widget.TextView
 
 
-internal class FilesAdapter(context: Context, private val items: List<FileItem>) : ArrayAdapter<FileItem>(context, R.layout.item_file, items) {
+internal class FilesAdapter(context: Context, private val id: Int, private val items: List<FileItem>) : ArrayAdapter<FileItem>(context, id, items) {
 
     override fun getItem(i: Int): FileItem {
         return items[i]
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view = if (convertView != null) {
-            convertView
-        } else {
-            val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            inflater.inflate(R.layout.item_file, null)
-        }
+        val view = convertView ?: LayoutInflater.from(context).inflate(id, parent, false)
 
         val option = items[position]
 
