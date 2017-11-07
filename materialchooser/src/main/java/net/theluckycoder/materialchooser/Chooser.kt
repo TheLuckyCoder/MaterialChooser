@@ -2,28 +2,29 @@ package net.theluckycoder.materialchooser
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Environment
 
 
-class Chooser(private val activity: Activity, private val requestCode: Int) {
+class Chooser(private val activity: Activity,
+              private val requestCode: Int,
+              private var rootPath: String = Environment.getExternalStorageDirectory().absolutePath,
+              private var startPath: String = rootPath,
+              private var fileExtension: String = "",
+              private var showHiddenFiles: Boolean = true,
+              @ChooserType private var chooserType: Int = FILE_CHOOSER) {
 
-    companion object {
-        @JvmField val CHOOSER_TYPE = "chooserType"
-        @JvmField val ROOT_DIR_PATH = "rootDirPath"
-        @JvmField val START_DIR_PATH = "startDirPath"
-        @JvmField val FILE_EXTENSION = "fileExtension"
-        @JvmField val SHOW_HIDDEN_FILES = "showHiddenFiles"
+    companion object Constants {
+        const val CHOOSER_TYPE = "chooserType"
+        const val ROOT_DIR_PATH = "rootDirPath"
+        const val START_DIR_PATH = "startDirPath"
+        const val FILE_EXTENSION = "fileExtension"
+        const val SHOW_HIDDEN_FILES = "setShowHiddenFiles"
 
-        @JvmField val RESULT_PATH = "resultPath"
+        const val RESULT_PATH = "resultPath"
 
-        @JvmField val FILE_CHOOSER = 0
-        @JvmField val FOLDER_CHOOSER = 1
+        const val FILE_CHOOSER = 0
+        const val FOLDER_CHOOSER = 1
     }
-
-    @ChooserType private var mChooserType = FILE_CHOOSER
-    private var mRootPath: String? = null
-    private var mStartPath: String? = null
-    private var mFileExtension: String = ""
-    private var mShowHiddenFiles = false
 
     /**
      * Select a file or a folder
@@ -32,7 +33,7 @@ class Chooser(private val activity: Activity, private val requestCode: Int) {
      * *                     Default: FILE_CHOOSER
      */
     fun setChooserType(@ChooserType chooserType: Int): Chooser {
-        mChooserType = chooserType
+        this.chooserType = chooserType
         return this
     }
 
@@ -43,7 +44,7 @@ class Chooser(private val activity: Activity, private val requestCode: Int) {
      * *                    Default: External Storage
      */
     fun setRootPath(rootPath: String): Chooser {
-        mRootPath = rootPath
+        this.rootPath = rootPath
         return this
     }
 
@@ -54,7 +55,7 @@ class Chooser(private val activity: Activity, private val requestCode: Int) {
      * *                  Default: Root Path
      */
     fun setStartPath(startPath: String): Chooser {
-        mStartPath = startPath
+        this.startPath = startPath
         return this
     }
 
@@ -62,10 +63,10 @@ class Chooser(private val activity: Activity, private val requestCode: Int) {
      * Filter files trough extensions
      *
      * @param extension file extension in string format
-     * *                  Example : "txt"
+     * *                  Example: "txt"
      */
     fun setFileExtension(extension: String): Chooser {
-        mFileExtension = extension
+        this.fileExtension = extension
         return this
     }
 
@@ -75,25 +76,23 @@ class Chooser(private val activity: Activity, private val requestCode: Int) {
      * @param show show files and folders that begin with '.'
      *                     Default: false
      */
-    fun showHiddenFiles(show: Boolean): Chooser {
-        mShowHiddenFiles = show
+    fun setShowHiddenFiles(show: Boolean): Chooser {
+        showHiddenFiles = show
         return this
     }
 
     /**
-     * Start the file chooser activity
+     * Start the chooser activity
      *
      */
     fun start() {
         val intent = Intent(activity, ChooserActivity::class.java)
 
-        if (mRootPath != null)
-            intent.putExtra(ROOT_DIR_PATH, mRootPath)
-        if (mStartPath != null)
-            intent.putExtra(START_DIR_PATH, mStartPath)
-        intent.putExtra(FILE_EXTENSION, mFileExtension)
-        intent.putExtra(SHOW_HIDDEN_FILES, mShowHiddenFiles)
-        intent.putExtra(CHOOSER_TYPE, mChooserType)
+        intent.putExtra(ROOT_DIR_PATH, rootPath)
+        intent.putExtra(START_DIR_PATH, startPath)
+        intent.putExtra(FILE_EXTENSION, fileExtension)
+        intent.putExtra(SHOW_HIDDEN_FILES, showHiddenFiles)
+        intent.putExtra(CHOOSER_TYPE, chooserType)
 
         activity.startActivityForResult(intent, requestCode)
     }

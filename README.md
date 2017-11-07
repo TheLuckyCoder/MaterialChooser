@@ -3,8 +3,7 @@
 A lightweight Material-Designed File and Folder Chooser Library for Android written in Kotlin.
 
 ## SDK
-This library is built using Build Tools **26.0.1** and Kotlin version **1.1.4-3**, requires at least SDK Version **14** and targets SDK Version **26**.
-It also uses the AppCompat Library version **26.1.0** to maintain backwards compatibility.
+This library is built Kotlin version **1.1.51**, requires at least SDK Version **14** and targets SDK Version **27**.
 
 You will need Android Studio 3.0 or newer to build this project.
 
@@ -26,40 +25,42 @@ dependencies {
 ## How to use
 
 #### Open File Picker:
-```java
-new Chooser(this, 10)
-                .showHiddenFiles(true)
-                .setFileExtension("txt")
-                .start();
+```kotlin
+Chooser(this, 10)
+            .setShowHiddenFiles(true)
+            .setFileExtension("txt")
+            .start()
 ```
-or you can use Intents
-```java
-Intent intent = new Intent(this, ChooserActivity.class);
-intent.putExtra(Chooser.SHOW_HIDDEN_FILES, true);
-intent.putExtra(Chooser.FILE_EXTENSION, "txt");
-startActivityForResult(intent, 10);
+
+Or you can just use the default parameters
+```kotlin
+Chooser(this, 10,
+            startPath = Environment.getExternalStorageDirectory().absolutePath + "/Android/",
+            showHiddenFiles = true,
+            fileExtension = "txt")
+            .start()
 ```
 
 #### Open Folder Picker:
 It's the same as for the file picker but you need to add ```setChooserType(Chooser.FOLDER_CHOOSER)```
-```java
-new Chooser(this, 10)
+```kotlin
+Chooser(this, 10)
                 .setChooserType(Chooser.FOLDER_CHOOSER)
-                .start();
+                .start()
 ```
 
 #### Receive the data:
 Override the onActivityResult method
-```java
-@Override
-protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
+```kotlin
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (data == null) return
 
-    if (requestCode == 10 && resultCode == RESULT_OK) {
-        String filePath = data.getStringExtra(Chooser.RESULT_PATH);
-        // Do something with the file
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            val filePath = data.getStringExtra(Chooser.RESULT_PATH)
+            filePathTxt.text = filePath
+        }
     }
-}
 ```
 
 ## Documentation
