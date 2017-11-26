@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="file_chooser_device">Device</string>
+    <string name="file_chooser_choose_folder">Choose Folder</string>
+    <string name="file_chooser_parent_directory">Parent Directory</string>
+    <string name="file_chooser_permission_required">Permission required</string>
+    <string name="file_chooser_permission_required_desc">External storage permission is needed in order to view files</string>
+</resources>
