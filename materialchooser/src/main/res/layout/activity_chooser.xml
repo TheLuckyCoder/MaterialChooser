@@ -19,7 +19,6 @@
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
         android:text="@string/file_chooser_choose_folder"
-        android:textColor="@android:color/primary_text_dark"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </RelativeLayout>

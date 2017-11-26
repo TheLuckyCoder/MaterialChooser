@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity() {
     fun startFileChooser(@Suppress("UNUSED_PARAMETER") view: View) {
         Chooser(this,
                 REQUEST_CODE,
-                rootPath = Environment.getExternalStorageDirectory().absolutePath,
                 startPath = Environment.getExternalStorageDirectory().absolutePath + "/Android/",
                 showHiddenFiles = true,
                 fileExtension = "txt")

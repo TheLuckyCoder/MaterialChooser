@@ -5,7 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
-import android.support.annotation.RequiresApi
+import android.support.annotation.RestrictTo
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
@@ -21,10 +21,10 @@ import java.io.File
 import java.util.*
 
 
-@RequiresApi
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ChooserActivity : AppCompatActivity(), FilesAdapter.OnFileClickListener {
 
-    private val mFilesList = ArrayList<FileItem>()
+    private val mItemList = ArrayList<FileItem>()
     private lateinit var mAdapter: FilesAdapter
     private var mShowHiddenFiles = false
     private var mIsFileChooser = true
@@ -38,7 +38,7 @@ class ChooserActivity : AppCompatActivity(), FilesAdapter.OnFileClickListener {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        mAdapter = FilesAdapter(mFilesList, this)
+        mAdapter = FilesAdapter(mItemList, this)
         mAdapter.setHasStableIds(true)
 
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
@@ -53,13 +53,13 @@ class ChooserActivity : AppCompatActivity(), FilesAdapter.OnFileClickListener {
         mIsFileChooser = intent.getIntExtra(Chooser.CHOOSER_TYPE, 0) == 0
 
         if (!mIsFileChooser) {
-            val selectFolder: Button = findViewById(R.id.button_select_folder)
-            selectFolder.visibility = View.VISIBLE
-            selectFolder.setOnClickListener({ onSelect(mCurrentDir.absolutePath + "/") })
+            val selectFolderBtn: Button = findViewById(R.id.button_select_folder)
+            selectFolderBtn.visibility = View.VISIBLE
+            selectFolderBtn.setOnClickListener({ finishWithResult(mCurrentDir.absolutePath + "/") })
         }
 
         mCurrentDir.mkdirs()
-        load(mCurrentDir)
+        loadFolder(mCurrentDir)
 
         checkForStoragePermission()
     }
@@ -67,16 +67,16 @@ class ChooserActivity : AppCompatActivity(), FilesAdapter.OnFileClickListener {
     override fun onFileClick(item: FileItem) {
         if (item.isFolder) {
             mCurrentDir = File(item.path)
-            load(mCurrentDir)
+            loadFolder(mCurrentDir)
         } else {
-            onSelect(item.path)
+            finishWithResult(item.path)
         }
     }
 
     override fun onBackPressed() {
         if (mCurrentDir.absolutePath != mRootDirPath) {
             mCurrentDir = mCurrentDir.parentFile
-            load(mCurrentDir)
+            loadFolder(mCurrentDir)
         } else {
             setResult(RESULT_CANCELED)
             finish()
@@ -97,12 +97,14 @@ class ChooserActivity : AppCompatActivity(), FilesAdapter.OnFileClickListener {
                 Log.e("Storage Permission", "Not Granted")
                 finish()
             } else {
-                load(mCurrentDir)
+                loadFolder(mCurrentDir)
             }
         }
     }
 
-    private fun load(dir: File) {
+
+
+    private fun loadFolder(dir: File) {
         val listedFilesArray = dir.listFiles()
         title = dir.absolutePath.replace(Environment.getExternalStorageDirectory().absolutePath, getString(R.string.file_chooser_device))
         val dirsList = ArrayList<FileItem>()
@@ -118,12 +120,11 @@ class ChooserActivity : AppCompatActivity(), FilesAdapter.OnFileClickListener {
                                 mFileExtension == "" -> filesList.add(FileItem(it.name, it.absolutePath, false))
                             }
                         } else {
-                            if (!it.name.startsWith(".")) {
-                                when {
-                                    it.isDirectory -> dirsList.add(FileItem(it.name, it.absolutePath, true))
-                                    mFileExtension != "" && it.extension == mFileExtension -> filesList.add(FileItem(it.name, it.absolutePath, false))
-                                    mFileExtension == "" -> filesList.add(FileItem(it.name, it.absolutePath, false))
-                                }
+                            if (it.name.startsWith(".")) return@forEach
+                            when {
+                                it.isDirectory -> dirsList.add(FileItem(it.name, it.absolutePath, true))
+                                mFileExtension != "" && it.extension == mFileExtension -> filesList.add(FileItem(it.name, it.absolutePath, false))
+                                mFileExtension == "" -> filesList.add(FileItem(it.name, it.absolutePath, false))
                             }
                         }
                     }
@@ -140,12 +141,12 @@ class ChooserActivity : AppCompatActivity(), FilesAdapter.OnFileClickListener {
             dirsList.add(0, FileItem(getString(R.string.file_chooser_parent_directory), dir.parent, true, true))
         }
 
-        mFilesList.clear()
-        mFilesList.addAll(dirsList)
+        mItemList.clear()
+        mItemList.addAll(dirsList)
         mAdapter.notifyDataSetChanged()
     }
 
-    private fun onSelect(path: String) {
+    private fun finishWithResult(path: String) {
         val intent = Intent()
         intent.putExtra(Chooser.RESULT_PATH, path)
         setResult(RESULT_OK, intent)

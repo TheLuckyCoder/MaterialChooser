@@ -10,7 +10,7 @@ class Chooser(private val activity: Activity,
               private var rootPath: String = Environment.getExternalStorageDirectory().absolutePath,
               private var startPath: String = rootPath,
               private var fileExtension: String = "",
-              private var showHiddenFiles: Boolean = true,
+              private var showHiddenFiles: Boolean = false,
               @ChooserType private var chooserType: Int = FILE_CHOOSER) {
 
     companion object Constants {
