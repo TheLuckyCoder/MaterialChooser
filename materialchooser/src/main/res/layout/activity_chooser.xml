@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".ChooserActivity">
 
-    <ListView
-        android:id="@+id/list"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/button_select_folder"
@@ -18,7 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
-        android:text="@string/choose_folder"
-        android:visibility="gone" />
+        android:text="@string/file_chooser_choose_folder"
+        android:textColor="@android:color/primary_text_dark"
+        android:visibility="visible" />
 
 </RelativeLayout>

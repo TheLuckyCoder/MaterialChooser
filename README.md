@@ -3,7 +3,7 @@
 A lightweight Material-Designed File and Folder Chooser Library for Android written in Kotlin.
 
 ## SDK
-This library is built Kotlin version **1.1.51**, requires at least SDK Version **14** and targets SDK Version **27**.
+This library is built Kotlin version **1.1.6**, requires at least SDK Version **14** and targets SDK Version **27**.
 
 You will need Android Studio 3.0 or newer to build this project.
 

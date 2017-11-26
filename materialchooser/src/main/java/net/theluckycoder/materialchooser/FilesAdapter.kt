@@ -1,38 +1,42 @@
 package net.theluckycoder.materialchooser
 
-import android.content.Context
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 
 
-internal class FilesAdapter(context: Context, private val id: Int, private val items: List<FileItem>) : ArrayAdapter<FileItem>(context, id, items) {
+internal class FilesAdapter(private val list: List<FileItem>, private val listener: OnFileClickListener) : RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
 
-    override fun getItem(i: Int): FileItem {
-        return items[i]
+    internal interface OnFileClickListener {
+        fun onFileClick(item: FileItem)
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view = convertView ?: LayoutInflater.from(context).inflate(id, parent, false)
+    override fun getItemId(position: Int) = list[position].hashCode().toLong()
 
-        val option = items[position]
+    override fun getItemCount() = list.size
 
-        val nameTxt: TextView = view.findViewById(R.id.text_name)
-        val iconImg: ImageView = view.findViewById(R.id.image_icon)
+    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int) =
+            FilesAdapter.ViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.item_file, viewGroup, false))
 
-        nameTxt.text = option.name
+    override fun onBindViewHolder(viewHolder: FilesAdapter.ViewHolder, position: Int) {
+        val item = list[position]
 
-        if (option.isFolder && option.name == context.getString(R.string.parent_directory))
-            iconImg.setImageResource(R.drawable.ic_up)
-        else if (option.isFolder)
-            iconImg.setImageResource(R.drawable.ic_folder)
-        else
-            iconImg.setImageResource(R.drawable.ic_file)
+        val drawable = when {
+            item.isParent -> R.drawable.ic_up
+            item.isFolder -> R.drawable.ic_folder
+            else -> R.drawable.ic_file
+        }
 
-        return view
+        viewHolder.nameTxt.text = item.name
+        viewHolder.iconImg.setImageResource(drawable)
+        viewHolder.itemView.setOnClickListener { listener.onFileClick(item) }
     }
 
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        @JvmField val nameTxt: TextView = view.findViewById(R.id.text_name)
+        @JvmField val iconImg: ImageView = view.findViewById(R.id.image_icon)
+    }
 }

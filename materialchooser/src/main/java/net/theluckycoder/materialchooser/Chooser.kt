@@ -18,7 +18,7 @@ class Chooser(private val activity: Activity,
         const val ROOT_DIR_PATH = "rootDirPath"
         const val START_DIR_PATH = "startDirPath"
         const val FILE_EXTENSION = "fileExtension"
-        const val SHOW_HIDDEN_FILES = "setShowHiddenFiles"
+        const val SHOW_HIDDEN_FILES = "showHiddenFiles"
 
         const val RESULT_PATH = "resultPath"
 
