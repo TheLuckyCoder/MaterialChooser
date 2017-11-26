@@ -1,5 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.dokka-android'
+apply plugin: 'maven-publish'
+
+ext.libVersion = "1.1.0"
 
 android {
     compileSdkVersion 27
@@ -8,7 +12,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 27
         versionCode 3
-        versionName "1.1.0"
+        versionName libVersion
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -19,8 +23,15 @@ android {
     }
 }
 
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    api 'com.android.support:appcompat-v7:27.0.1'
-    api 'com.android.support:recyclerview-v7:27.0.1'
+dokka {
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/javadoc"
 }
+
+dependencies {
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compileOnly 'com.android.support:appcompat-v7:27.0.1'
+    compileOnly 'com.android.support:recyclerview-v7:27.0.1'
+}
+
+apply from: 'deploy.gradle'

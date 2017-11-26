@@ -1,4 +1,5 @@
 # Material Chooser
+[ ![Download](https://api.bintray.com/packages/theluckycoder/materialchooser/material-chooser/images/download.svg) ](https://bintray.com/theluckycoder/materialchooser/material-chooser/_latestVersion)
 
 A lightweight Material-Designed File and Folder Chooser Library for Android written in Kotlin.
 
@@ -7,18 +8,12 @@ This library is built Kotlin version **1.1.6**, requires at least SDK Version **
 
 You will need Android Studio 3.0 or newer to build this project.
 
-## How to add to your project
+## Including it in your Project
 
-Copy the library module to your main project folder
-
-Add this line to your settings.gradle file:
-```gradle
-include ':materialchooser'
-```
-Then make sure your build.gradle file contains this:
+Add the following to your app's build.gradle file:
 ```gradle
 dependencies {
-    implementation project(':materialchooser')
+    compile 'net.theluckycoder.materialchooser:materialchooser:1.1.0'
 }
 ```
 
@@ -65,7 +60,7 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 
 ## Documentation
 
-You can find all the usable methods documented over [here](https://github.com/TheLuckyCoder/MaterialChooser/blob/kotlin/filechooser/src/main/java/net/theluckycoder/filechooser/Chooser.kt
+You can find all the usable methods documented [here](https://github.com/TheLuckyCoder/MaterialChooser/blob/kotlin/filechooser/src/main/java/net/theluckycoder/filechooser/Chooser.kt)
 
 ## Customize
 
@@ -89,4 +84,18 @@ or you can directly override the theme
 
 ## License
 
-This project is licensed under the Apache License 2.0
+```
+Copyright 2017 TheLuckyCoder
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
