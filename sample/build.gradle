@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.0"
+    buildToolsVersion "27.0.2"
     defaultConfig {
         applicationId "net.theluckycoder.materialchooser.sample"
         minSdkVersion 14
@@ -22,5 +22,5 @@ android {
 dependencies {
     implementation project(':materialchooser')
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:27.0.1'
+    implementation 'com.android.support:appcompat-v7:27.0.2'
 }

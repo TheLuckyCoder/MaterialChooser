@@ -18,7 +18,7 @@ internal class FilesAdapter(private val list: List<FileItem>, private val listen
 
     override fun getItemCount() = list.size
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int) =
+    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder =
             FilesAdapter.ViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.item_file, viewGroup, false))
 
     override fun onBindViewHolder(viewHolder: FilesAdapter.ViewHolder, position: Int) {

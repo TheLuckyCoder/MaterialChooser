@@ -4,7 +4,8 @@
 A lightweight Material-Designed File and Folder Chooser Library for Android written in Kotlin.
 
 ## SDK
-This library is built Kotlin version **1.1.6**, requires at least SDK Version **14** and targets SDK Version **27**.
+This library requires at least SDK Version **14** and 
+targets SDK Version **27**.
 
 You will need Android Studio 3.0 or newer to build this project.
 
@@ -13,7 +14,7 @@ You will need Android Studio 3.0 or newer to build this project.
 Add the following to your app's build.gradle file:
 ```gradle
 dependencies {
-    compile 'net.theluckycoder.materialchooser:materialchooser:1.1.0'
+    compile 'net.theluckycoder.materialchooser:materialchooser:1.1.2'
 }
 ```
 
@@ -67,8 +68,8 @@ You can find all the usable methods documented [here](https://github.com/TheLuck
 If you want to change any color of the File Chooser, just redefine one of these colors in your own project:
 ```xml
 <!-- Default Colors -->
-<color name="colorPrimary">#29b6f6</color> <!-- Main App Color -->
-<color name="colorPrimaryDark">#0086c3</color> <!-- Dark Main App Color -->
+<color name="colorPrimary">#29b6f6</color> <!-- Main Chooser Color -->
+<color name="colorPrimaryDark">#0086c3</color> <!-- Dark Main Chooser Color -->
 <color name="colorAccent">#d500f9</color> <!-- Folders and Files Icon Color -->
 ```
 
