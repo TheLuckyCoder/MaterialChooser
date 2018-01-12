@@ -7,19 +7,18 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 
-
-internal class FilesAdapter(private val list: List<FileItem>, private val listener: OnFileClickListener) : RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
-
-    internal interface OnFileClickListener {
-        fun onFileClick(item: FileItem)
-    }
+internal class FilesAdapter(private val list: List<FileItem>,
+                            private val onFileClick: (item: FileItem) -> Unit)
+    : RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
 
     override fun getItemId(position: Int) = list[position].hashCode().toLong()
 
     override fun getItemCount() = list.size
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder =
-            FilesAdapter.ViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.item_file, viewGroup, false))
+    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
+        return ViewHolder(LayoutInflater.from(viewGroup.context)
+            .inflate(R.layout.item_file, viewGroup, false))
+    }
 
     override fun onBindViewHolder(viewHolder: FilesAdapter.ViewHolder, position: Int) {
         val item = list[position]
@@ -32,11 +31,18 @@ internal class FilesAdapter(private val list: List<FileItem>, private val listen
 
         viewHolder.nameTxt.text = item.name
         viewHolder.iconImg.setImageResource(drawable)
-        viewHolder.itemView.setOnClickListener { listener.onFileClick(item) }
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        @JvmField val nameTxt: TextView = view.findViewById(R.id.text_name)
-        @JvmField val iconImg: ImageView = view.findViewById(R.id.image_icon)
+    internal inner class ViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
+        val nameTxt: TextView = view.findViewById(R.id.text_name)
+        val iconImg: ImageView = view.findViewById(R.id.image_icon)
+
+        init {
+            itemView.setOnClickListener {
+                val pos = adapterPosition
+
+                if (pos != RecyclerView.NO_POSITION) onFileClick(list[pos])
+            }
+        }
     }
 }

@@ -18,18 +18,18 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import java.io.File
-import java.util.*
-
+import java.util.ArrayList
+import java.util.Collections
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class ChooserActivity : AppCompatActivity(), FilesAdapter.OnFileClickListener {
+class ChooserActivity : AppCompatActivity() {
 
     private val mItemList = ArrayList<FileItem>()
     private lateinit var mAdapter: FilesAdapter
     private var mShowHiddenFiles = false
     private var mIsFileChooser = true
     private var mRootDirPath = Environment.getExternalStorageDirectory().absolutePath
-    private lateinit var mCurrentDir: File
+    private var mCurrentDir = File(mRootDirPath)
     private var mFileExtension = ""
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,45 +38,48 @@ class ChooserActivity : AppCompatActivity(), FilesAdapter.OnFileClickListener {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        mAdapter = FilesAdapter(mItemList, this)
+        mAdapter = FilesAdapter(mItemList, { item ->
+            if (item.isFolder) {
+                mCurrentDir = File(item.path)
+                updateAdapter()
+            } else {
+                finishWithResult(item.path)
+            }
+        })
         mAdapter.setHasStableIds(true)
 
-        val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = mAdapter
-        recyclerView.setHasFixedSize(true)
+        findViewById<RecyclerView>(R.id.recycler_view).apply {
+            layoutManager = LinearLayoutManager(this@ChooserActivity)
+            adapter = mAdapter
+            setHasFixedSize(true)
+        }
 
         mRootDirPath = intent.getStringExtra(Chooser.ROOT_DIR_PATH) ?: mRootDirPath
-        mCurrentDir = File(intent.getStringExtra(Chooser.START_DIR_PATH) ?: mRootDirPath)
+        val startPath = intent.getStringExtra(Chooser.START_DIR_PATH) ?: mRootDirPath
+        if (startPath != mRootDirPath) mCurrentDir = File(startPath)
         mFileExtension = intent.getStringExtra(Chooser.FILE_EXTENSION) ?: ""
         mShowHiddenFiles = intent.getBooleanExtra(Chooser.SHOW_HIDDEN_FILES, false)
         mIsFileChooser = intent.getIntExtra(Chooser.CHOOSER_TYPE, 0) == 0
 
         if (!mIsFileChooser) {
             val selectFolderBtn: Button = findViewById(R.id.button_select_folder)
+
             selectFolderBtn.visibility = View.VISIBLE
-            selectFolderBtn.setOnClickListener({ finishWithResult(mCurrentDir.absolutePath + "/") })
+            selectFolderBtn.setOnClickListener {
+                finishWithResult(mCurrentDir.absolutePath + "/")
+            }
         }
 
         mCurrentDir.mkdirs()
-        loadFolder(mCurrentDir)
+        updateAdapter()
 
         checkForStoragePermission()
-    }
-
-    override fun onFileClick(item: FileItem) {
-        if (item.isFolder) {
-            mCurrentDir = File(item.path)
-            loadFolder(mCurrentDir)
-        } else {
-            finishWithResult(item.path)
-        }
     }
 
     override fun onBackPressed() {
         if (mCurrentDir.absolutePath != mRootDirPath) {
             mCurrentDir = mCurrentDir.parentFile
-            loadFolder(mCurrentDir)
+            updateAdapter()
         } else {
             setResult(RESULT_CANCELED)
             finish()
@@ -91,55 +94,71 @@ class ChooserActivity : AppCompatActivity(), FilesAdapter.OnFileClickListener {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
+                                            grantResults: IntArray) {
         if (requestCode == 100) {
             if (grantResults.size < 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                Log.e("Storage Permission", "Not Granted")
+                Log.e("Storage Permission", "Permission not granted")
                 finish()
             } else {
                 mCurrentDir.mkdirs()
-                loadFolder(mCurrentDir)
+                updateAdapter()
             }
         }
     }
 
-    private fun loadFolder(dir: File) {
-        val listedFilesArray = dir.listFiles()
-        title = dir.absolutePath.replace(Environment.getExternalStorageDirectory().absolutePath,
-                getString(R.string.file_chooser_device))
+    private fun updateAdapter() {
+        val list = getListedFiles()
+
+        if (mCurrentDir.absolutePath != mRootDirPath) {
+            val parentFolder = mCurrentDir.parent ?: mRootDirPath
+            list.add(0, FileItem(getString(R.string.file_chooser_parent_directory),
+                parentFolder, true, true))
+        }
+
+        mItemList.clear()
+        mItemList.addAll(list)
+        mAdapter.notifyDataSetChanged()
+    }
+
+    private fun getListedFiles(): ArrayList<FileItem> {
+        val listedFilesArray = mCurrentDir.listFiles()
+        title = mCurrentDir.absolutePath.replace(Environment.getExternalStorageDirectory().absolutePath,
+            getString(R.string.file_chooser_device))
         val dirsList = ArrayList<FileItem>()
         val filesList = ArrayList<FileItem>()
 
         if (listedFilesArray != null && listedFilesArray.isNotEmpty()) {
-            listedFilesArray.filter { it.canRead() }
-                    .forEach {
-                        if (mShowHiddenFiles) {
-                            when {
-                                it.isDirectory -> {
-                                    dirsList.add(FileItem(it.name, it.absolutePath, true))
-                                }
-                                mFileExtension != "" && it.extension == mFileExtension -> {
-                                    filesList.add(FileItem(it.name, it.absolutePath, false))
-                                }
-                                mFileExtension == "" -> {
-                                    filesList.add(FileItem(it.name, it.absolutePath, false))
-                                }
+            listedFilesArray
+                .filter { it.canRead() }
+                .forEach {
+                    if (mShowHiddenFiles) {
+                        when {
+                            it.isDirectory -> {
+                                dirsList.add(FileItem(it.name, it.absolutePath, true))
                             }
-                        } else {
-                            if (it.name.startsWith(".")) return@forEach
-                            when {
-                                it.isDirectory -> {
-                                    dirsList.add(FileItem(it.name, it.absolutePath, true))
-                                }
-                                mFileExtension != "" && it.extension == mFileExtension -> {
-                                    filesList.add(FileItem(it.name, it.absolutePath, false))
-                                }
-                                mFileExtension == "" -> {
-                                    filesList.add(FileItem(it.name, it.absolutePath, false))
-                                }
+                            mFileExtension != "" && it.extension == mFileExtension -> {
+                                filesList.add(FileItem(it.name, it.absolutePath, false))
+                            }
+                            mFileExtension == "" -> {
+                                filesList.add(FileItem(it.name, it.absolutePath, false))
+                            }
+                        }
+                    } else {
+                        if (it.name.startsWith(".")) return@forEach
+                        when {
+                            it.isDirectory -> {
+                                dirsList.add(FileItem(it.name, it.absolutePath, true))
+                            }
+                            mFileExtension != "" && it.extension == mFileExtension -> {
+                                filesList.add(FileItem(it.name, it.absolutePath, false))
+                            }
+                            mFileExtension == "" -> {
+                                filesList.add(FileItem(it.name, it.absolutePath, false))
                             }
                         }
                     }
+                }
         }
 
         Collections.sort(dirsList)
@@ -149,38 +168,33 @@ class ChooserActivity : AppCompatActivity(), FilesAdapter.OnFileClickListener {
             dirsList.addAll(filesList)
         }
 
-        if (dir.absolutePath != mRootDirPath) {
-            val parentFolder = dir.parent ?: mRootDirPath
-            dirsList.add(0, FileItem(getString(R.string.file_chooser_parent_directory),
-                    parentFolder, true, true))
-        }
-
-        mItemList.clear()
-        mItemList.addAll(dirsList)
-        mAdapter.notifyDataSetChanged()
+        return dirsList
     }
 
     private fun finishWithResult(path: String) {
-        val intent = Intent()
-        intent.putExtra(Chooser.RESULT_PATH, path)
-        setResult(RESULT_OK, intent)
+        Intent().apply {
+            putExtra(Chooser.RESULT_PATH, path)
+        }.run {
+            setResult(RESULT_OK, this)
+        }
         finish()
     }
 
     private fun checkForStoragePermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) return
+        val permission = Manifest.permission.WRITE_EXTERNAL_STORAGE
+        if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) return
 
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
             Toast.makeText(this, R.string.file_chooser_permission_required_desc, Toast.LENGTH_LONG).show()
         } else {
             AlertDialog.Builder(this)
-                    .setTitle(R.string.file_chooser_permission_required)
-                    .setMessage(R.string.file_chooser_permission_required_desc)
-                    .setCancelable(false)
-                    .setIcon(R.drawable.ic_folder)
-                    .setPositiveButton(android.R.string.ok) { _, _ ->
-                        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 100)
-                    }.show()
+                .setTitle(R.string.file_chooser_permission_required)
+                .setMessage(R.string.file_chooser_permission_required_desc)
+                .setCancelable(false)
+                .setIcon(R.drawable.ic_folder)
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    ActivityCompat.requestPermissions(this, arrayOf(permission), 100)
+                }.show()
         }
     }
 }

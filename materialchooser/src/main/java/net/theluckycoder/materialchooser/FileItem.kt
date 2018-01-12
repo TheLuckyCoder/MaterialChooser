@@ -1,10 +1,10 @@
 package net.theluckycoder.materialchooser
 
-class FileItem(val name: String,
-               val path: String,
-               val isFolder: Boolean,
-               val isParent: Boolean = false) : Comparable<FileItem> {
+internal class FileItem(val name: String,
+                        val path: String,
+                        val isFolder: Boolean,
+                        val isParent: Boolean = false)
+    : Comparable<FileItem> {
 
-    override fun compareTo(other: FileItem): Int =
-            name.toLowerCase().compareTo(other.name.toLowerCase())
+    override fun compareTo(other: FileItem): Int = name.toLowerCase().compareTo(other.name.toLowerCase())
 }

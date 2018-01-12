@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.TextView
 import net.theluckycoder.materialchooser.Chooser
 
-
 class MainActivity : AppCompatActivity() {
 
     private companion object {
@@ -36,10 +35,10 @@ class MainActivity : AppCompatActivity() {
 
     fun startFileChooser(@Suppress("UNUSED_PARAMETER") view: View) {
         Chooser(this,
-                REQUEST_CODE,
-                startPath = Environment.getExternalStorageDirectory().absolutePath + "/Android/",
-                showHiddenFiles = true,
-                fileExtension = "txt")
-                .start()
+            requestCode = REQUEST_CODE,
+            startPath = Environment.getExternalStorageDirectory().absolutePath + "/Android/",
+            showHiddenFiles = true,
+            fileExtension = "txt")
+            .start()
     }
 }
