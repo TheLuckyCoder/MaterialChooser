@@ -48,11 +48,10 @@ class ChooserActivity : AppCompatActivity() {
         })
         mAdapter.setHasStableIds(true)
 
-        findViewById<RecyclerView>(R.id.recycler_view).apply {
-            layoutManager = LinearLayoutManager(this@ChooserActivity)
-            adapter = mAdapter
-            setHasFixedSize(true)
-        }
+        val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.setHasFixedSize(true)
+        recyclerView.adapter = mAdapter
 
         mRootDirPath = intent.getStringExtra(Chooser.ROOT_DIR_PATH) ?: mRootDirPath
         val startPath = intent.getStringExtra(Chooser.START_DIR_PATH) ?: mRootDirPath
@@ -132,30 +131,16 @@ class ChooserActivity : AppCompatActivity() {
             listedFilesArray
                 .filter { it.canRead() }
                 .forEach {
-                    if (mShowHiddenFiles) {
-                        when {
-                            it.isDirectory -> {
-                                dirsList.add(FileItem(it.name, it.absolutePath, true))
-                            }
-                            mFileExtension != "" && it.extension == mFileExtension -> {
-                                filesList.add(FileItem(it.name, it.absolutePath, false))
-                            }
-                            mFileExtension == "" -> {
-                                filesList.add(FileItem(it.name, it.absolutePath, false))
-                            }
+                    if (!mShowHiddenFiles && it.name.startsWith(".")) return@forEach
+                    when {
+                        it.isDirectory -> {
+                            dirsList.add(FileItem(it.name, it.absolutePath, true))
                         }
-                    } else {
-                        if (it.name.startsWith(".")) return@forEach
-                        when {
-                            it.isDirectory -> {
-                                dirsList.add(FileItem(it.name, it.absolutePath, true))
-                            }
-                            mFileExtension != "" && it.extension == mFileExtension -> {
-                                filesList.add(FileItem(it.name, it.absolutePath, false))
-                            }
-                            mFileExtension == "" -> {
-                                filesList.add(FileItem(it.name, it.absolutePath, false))
-                            }
+                        mFileExtension.isEmpty() -> {
+                            filesList.add(FileItem(it.name, it.absolutePath, false))
+                        }
+                        mFileExtension.isNotEmpty() && it.extension == mFileExtension -> {
+                            filesList.add(FileItem(it.name, it.absolutePath, false))
                         }
                     }
                 }

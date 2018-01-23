@@ -13,8 +13,8 @@ bintray {
     user = 'theluckycoder'
     key = bintray_key
     configurations = ['archives']
-    publish = true //[Default: false] Whether version should be auto published after an upload
-    override = false //[Default: false] Whether to override version artifacts already published
+    publish = true
+    override = false
     pkg {
         repo = "materialchooser"
         name = "material-chooser"

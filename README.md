@@ -1,5 +1,7 @@
 # Material Chooser
-[ ![Download](https://api.bintray.com/packages/theluckycoder/materialchooser/material-chooser/images/download.svg) ](https://bintray.com/theluckycoder/materialchooser/material-chooser/_latestVersion)
+[![API](https://img.shields.io/badge/API-15%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=15)
+[![Download](https://api.bintray.com/packages/theluckycoder/materialchooser/material-chooser/images/download.svg) ](https://bintray.com/theluckycoder/materialchooser/material-chooser/_latestVersion)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/vipulasri/Timeline-View/blob/master/LICENSE)
 
 A lightweight Material-Designed File and Folder Chooser Library for Android written in Kotlin.
 
@@ -11,11 +13,22 @@ You will need Android Studio 3.0 or newer to build this project.
 
 ## Including it in your Project
 
-Add the following to your app's build.gradle file:
+**Using Gradle**
 ```gradle
 dependencies {
-    compile 'net.theluckycoder.materialchooser:materialchooser:1.1.2'
+    compile 'net.theluckycoder.materialchooser:materialchooser:1.1.3'
 }
+```
+
+**Using Maven**
+
+```maven
+<dependency>
+  <groupId>net.theluckycoder.materialchooser</groupId>
+  <artifactId>materialchooser</artifactId>
+  <version>1.1.3</version>
+  <type>pom</type>
+</dependency>
 ```
 
 ## How to use
@@ -23,40 +36,40 @@ dependencies {
 #### Open File Picker:
 ```kotlin
 Chooser(this, 10)
-            .setShowHiddenFiles(true)
-            .setFileExtension("txt")
-            .start()
+    .setShowHiddenFiles(true)
+    .setFileExtension("txt")
+    .start()
 ```
 
 Or you can just use the default parameters
 ```kotlin
 Chooser(this, 10,
-            startPath = Environment.getExternalStorageDirectory().absolutePath + "/Android/",
-            showHiddenFiles = true,
-            fileExtension = "txt")
-            .start()
+    startPath = Environment.getExternalStorageDirectory().absolutePath + "/Android/",
+    showHiddenFiles = true,
+    fileExtension = "txt")
+    .start()
 ```
 
 #### Open Folder Picker:
 It's the same as for the file picker but you need to add ```setChooserType(Chooser.FOLDER_CHOOSER)```
 ```kotlin
 Chooser(this, 10)
-                .setChooserType(Chooser.FOLDER_CHOOSER)
-                .start()
+    .setChooserType(Chooser.FOLDER_CHOOSER)
+    .start()
 ```
 
 #### Receive the data:
 Override the onActivityResult method
 ```kotlin
 override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (data == null) return
+    super.onActivityResult(requestCode, resultCode, data)
+    data ?: return
 
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            val filePath = data.getStringExtra(Chooser.RESULT_PATH)
-            filePathTxt.text = filePath
-        }
+    if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+        val filePath = data.getStringExtra(Chooser.RESULT_PATH)
+        filePathTxt.text = filePath
     }
+}
 ```
 
 ## Documentation
@@ -86,7 +99,7 @@ or you can directly override the theme
 ## License
 
 ```
-Copyright 2017 TheLuckyCoder
+Copyright 2017-2018 TheLuckyCoder
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

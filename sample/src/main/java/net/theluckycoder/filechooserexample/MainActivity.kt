@@ -25,10 +25,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (data == null) return
+        data ?: return
 
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             val filePath = data.getStringExtra(Chooser.RESULT_PATH)
+
             filePathTxt.text = filePath
         }
     }
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     fun startFileChooser(@Suppress("UNUSED_PARAMETER") view: View) {
         Chooser(this,
             requestCode = REQUEST_CODE,
-            startPath = Environment.getExternalStorageDirectory().absolutePath + "/Android/",
+            startPath = Environment.getDataDirectory().absolutePath,
             showHiddenFiles = true,
             fileExtension = "txt")
             .start()

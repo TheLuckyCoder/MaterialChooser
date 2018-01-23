@@ -65,7 +65,7 @@ class Chooser(private val activity: Activity,
      * *    Example: "txt"
      */
     fun setFileExtension(extension: String): Chooser {
-        this.fileExtension = extension
+        fileExtension = extension
         return this
     }
 
