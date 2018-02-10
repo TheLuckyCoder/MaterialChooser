@@ -6,17 +6,25 @@
     android:gravity="center_horizontal"
     android:padding="16dp">
 
+    <Switch
+        android:id="@+id/sw_hidden_files"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show hidden files"
+        android:textSize="17sp" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="startFileChooser"
-        android:text="@string/start_file_chooser" />
+        android:text="@string/start_file_chooser"
+        android:textSize="16sp"/>
 
     <TextView
-        android:id="@+id/filePath"
+        android:id="@+id/tv_file_path"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:textSize="17sp"
         android:layout_marginTop="16dp" />
 
 </LinearLayout>

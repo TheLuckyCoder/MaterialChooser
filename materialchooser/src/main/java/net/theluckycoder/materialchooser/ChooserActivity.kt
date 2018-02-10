@@ -121,7 +121,7 @@ class ChooserActivity : AppCompatActivity() {
     }
 
     private fun getListedFiles(): ArrayList<FileItem> {
-        val listedFilesArray = mCurrentDir.listFiles()
+        val listedFilesArray: Array<File>? = mCurrentDir.listFiles()
         title = mCurrentDir.absolutePath.replace(Environment.getExternalStorageDirectory().absolutePath,
             getString(R.string.file_chooser_device))
         val dirsList = ArrayList<FileItem>()
@@ -133,24 +133,19 @@ class ChooserActivity : AppCompatActivity() {
                 .forEach {
                     if (!mShowHiddenFiles && it.name.startsWith(".")) return@forEach
                     when {
-                        it.isDirectory -> {
-                            dirsList.add(FileItem(it.name, it.absolutePath, true))
-                        }
-                        mFileExtension.isEmpty() -> {
+                        it.isDirectory -> dirsList.add(FileItem(it.name, it.absolutePath, true))
+                        mFileExtension.isEmpty() -> filesList.add(FileItem(it.name, it.absolutePath, false))
+                        mFileExtension.isNotEmpty() && it.extension == mFileExtension ->
                             filesList.add(FileItem(it.name, it.absolutePath, false))
-                        }
-                        mFileExtension.isNotEmpty() && it.extension == mFileExtension -> {
-                            filesList.add(FileItem(it.name, it.absolutePath, false))
-                        }
                     }
                 }
-        }
 
-        Collections.sort(dirsList)
+            Collections.sort(dirsList)
 
-        if (mIsFileChooser) {
-            Collections.sort(filesList)
-            dirsList.addAll(filesList)
+            if (mIsFileChooser) {
+                Collections.sort(filesList)
+                dirsList.addAll(filesList)
+            }
         }
 
         return dirsList

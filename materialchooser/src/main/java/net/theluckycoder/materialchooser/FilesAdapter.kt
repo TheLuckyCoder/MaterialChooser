@@ -8,16 +8,24 @@ import android.widget.ImageView
 import android.widget.TextView
 
 internal class FilesAdapter(private val list: List<FileItem>,
-                            private val onFileClick: (item: FileItem) -> Unit)
-    : RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
+                            private val onFileClick: (item: FileItem) -> Unit
+) : RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
 
     override fun getItemId(position: Int) = list[position].hashCode().toLong()
 
     override fun getItemCount() = list.size
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(viewGroup.context)
+        val holder = ViewHolder(LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.item_file, viewGroup, false))
+
+        holder.itemView.setOnClickListener {
+            val pos = holder.adapterPosition
+
+            if (pos != RecyclerView.NO_POSITION) onFileClick(list[pos])
+        }
+
+        return holder
     }
 
     override fun onBindViewHolder(viewHolder: FilesAdapter.ViewHolder, position: Int) {
@@ -29,20 +37,12 @@ internal class FilesAdapter(private val list: List<FileItem>,
             else -> R.drawable.ic_file
         }
 
-        viewHolder.nameTxt.text = item.name
-        viewHolder.iconImg.setImageResource(drawable)
+        viewHolder.tvName.text = item.name
+        viewHolder.ivIcon.setImageResource(drawable)
     }
 
-    internal inner class ViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
-        val nameTxt: TextView = view.findViewById(R.id.text_name)
-        val iconImg: ImageView = view.findViewById(R.id.image_icon)
-
-        init {
-            itemView.setOnClickListener {
-                val pos = adapterPosition
-
-                if (pos != RecyclerView.NO_POSITION) onFileClick(list[pos])
-            }
-        }
+    internal class ViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
+        val tvName: TextView = view.findViewById(R.id.tv_name)
+        val ivIcon: ImageView = view.findViewById(R.id.iv_icon)
     }
 }

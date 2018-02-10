@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.Switch
 import android.widget.TextView
 import net.theluckycoder.materialchooser.Chooser
 
@@ -15,12 +16,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var filePathTxt: TextView
+    private lateinit var showHiddenFiles: Switch
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        filePathTxt = findViewById(R.id.filePath)
+        filePathTxt = findViewById(R.id.tv_file_path)
+        showHiddenFiles = findViewById(R.id.sw_hidden_files)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -37,8 +40,7 @@ class MainActivity : AppCompatActivity() {
     fun startFileChooser(@Suppress("UNUSED_PARAMETER") view: View) {
         Chooser(this,
             requestCode = REQUEST_CODE,
-            startPath = Environment.getDataDirectory().absolutePath,
-            showHiddenFiles = true,
+            showHiddenFiles = showHiddenFiles.isChecked,
             fileExtension = "txt")
             .start()
     }

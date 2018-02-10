@@ -13,7 +13,7 @@
         tools:listitem="@layout/item_file" />
 
     <Button
-        android:id="@+id/button_select_folder"
+        android:id="@+id/btn_select_folder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
