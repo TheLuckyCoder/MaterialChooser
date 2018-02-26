@@ -8,8 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 
 internal class FilesAdapter(private val list: List<FileItem>,
-                            private val onFileClick: (item: FileItem) -> Unit
+        private val onFileClick: (item: FileItem) -> Unit
 ) : RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
+
+    init { setHasStableIds(true) }
 
     override fun getItemId(position: Int) = list[position].hashCode().toLong()
 

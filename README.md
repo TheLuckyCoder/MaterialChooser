@@ -1,13 +1,9 @@
 # Material Chooser
-[![API](https://img.shields.io/badge/API-15%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=15)
+[![API](https://img.shields.io/badge/API-14%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=14)
 [![Download](https://api.bintray.com/packages/theluckycoder/materialchooser/material-chooser/images/download.svg) ](https://bintray.com/theluckycoder/materialchooser/material-chooser/_latestVersion)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/vipulasri/Timeline-View/blob/master/LICENSE)
 
 A lightweight Material-Designed File and Folder Chooser Library for Android written in Kotlin.
-
-## SDK
-This library requires at least SDK Version **14** and 
-targets SDK Version **27**.
 
 You will need Android Studio 3.0 or newer to build this project.
 
@@ -16,7 +12,7 @@ You will need Android Studio 3.0 or newer to build this project.
 **Using Gradle**
 ```gradle
 dependencies {
-    compile 'net.theluckycoder.materialchooser:materialchooser:1.1.3'
+    compile 'net.theluckycoder.materialchooser:materialchooser:1.1.4'
 }
 ```
 
@@ -26,7 +22,7 @@ dependencies {
 <dependency>
   <groupId>net.theluckycoder.materialchooser</groupId>
   <artifactId>materialchooser</artifactId>
-  <version>1.1.3</version>
+  <version>1.1.4</version>
   <type>pom</type>
 </dependency>
 ```

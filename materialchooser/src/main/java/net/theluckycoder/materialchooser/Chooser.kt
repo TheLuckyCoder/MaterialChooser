@@ -4,13 +4,13 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Environment
 
-class Chooser(private val activity: Activity,
-              private val requestCode: Int,
-              private var rootPath: String = Environment.getExternalStorageDirectory().absolutePath,
-              private var startPath: String = rootPath,
-              private var fileExtension: String = "",
-              private var showHiddenFiles: Boolean = false,
-              @ChooserType private var chooserType: Int = FILE_CHOOSER) {
+class Chooser @JvmOverloads constructor(private val activity: Activity,
+        private val requestCode: Int,
+        private var rootPath: String = Environment.getExternalStorageDirectory().absolutePath,
+        private var startPath: String = rootPath,
+        private var fileExtension: String = "",
+        private var showHiddenFiles: Boolean = false,
+        @ChooserType private var chooserType: Int = FILE_CHOOSER) {
 
     companion object Constants {
         internal const val CHOOSER_TYPE = "chooserType"
