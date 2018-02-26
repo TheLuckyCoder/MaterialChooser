@@ -16,15 +16,23 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:onClick="startFileChooser"
         android:text="@string/start_file_chooser"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="startFolderChooser"
+        android:text="@string/start_folder_chooser"
+        android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/tv_file_path"
+        android:id="@+id/tv_result_path"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="8dp"
+        android:textSize="17sp" />
 
 </LinearLayout>

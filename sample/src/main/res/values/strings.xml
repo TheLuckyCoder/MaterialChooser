@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">File Chooser Example</string>
     <string name="start_file_chooser">Start File Chooser</string>
+    <string name="start_folder_chooser">Start Folder Chooser</string>
 </resources>

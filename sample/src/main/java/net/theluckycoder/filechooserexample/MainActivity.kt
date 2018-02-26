@@ -14,15 +14,15 @@ class MainActivity : AppCompatActivity() {
         private const val REQUEST_CODE = 10
     }
 
-    private lateinit var filePathTxt: TextView
-    private lateinit var showHiddenFiles: Switch
+    private lateinit var tvResultPath: TextView
+    private lateinit var swShowHiddenFiles: Switch
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        filePathTxt = findViewById(R.id.tv_file_path)
-        showHiddenFiles = findViewById(R.id.sw_hidden_files)
+        tvResultPath = findViewById(R.id.tv_result_path)
+        swShowHiddenFiles = findViewById(R.id.sw_hidden_files)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -30,17 +30,25 @@ class MainActivity : AppCompatActivity() {
         data ?: return
 
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            val filePath = data.getStringExtra(Chooser.RESULT_PATH)
+            val path = data.getStringExtra(Chooser.RESULT_PATH)
 
-            filePathTxt.text = filePath
+            tvResultPath.text = path
         }
     }
 
     fun startFileChooser(@Suppress("UNUSED_PARAMETER") view: View) {
         Chooser(this,
             requestCode = REQUEST_CODE,
-            showHiddenFiles = showHiddenFiles.isChecked,
+            showHiddenFiles = swShowHiddenFiles.isChecked,
             fileExtension = "txt")
+            .start()
+    }
+
+    fun startFolderChooser(@Suppress("UNUSED_PARAMETER") view: View) {
+        Chooser(this,
+            requestCode = REQUEST_CODE,
+            showHiddenFiles = swShowHiddenFiles.isChecked,
+            chooserType = Chooser.FOLDER_CHOOSER)
             .start()
     }
 }
