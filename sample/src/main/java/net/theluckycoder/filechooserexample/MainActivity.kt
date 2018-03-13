@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var tvResultPath: TextView
     private lateinit var swShowHiddenFiles: Switch
+    private lateinit var swUseNightTheme: Switch
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         tvResultPath = findViewById(R.id.tv_result_path)
         swShowHiddenFiles = findViewById(R.id.sw_hidden_files)
+        swUseNightTheme = findViewById(R.id.sw_night_theme)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -40,7 +42,8 @@ class MainActivity : AppCompatActivity() {
         Chooser(this,
             requestCode = REQUEST_CODE,
             showHiddenFiles = swShowHiddenFiles.isChecked,
-            fileExtension = "txt")
+            fileExtension = "txt",
+            useNightTheme = swUseNightTheme.isChecked)
             .start()
     }
 
@@ -48,7 +51,8 @@ class MainActivity : AppCompatActivity() {
         Chooser(this,
             requestCode = REQUEST_CODE,
             showHiddenFiles = swShowHiddenFiles.isChecked,
-            chooserType = Chooser.FOLDER_CHOOSER)
+            chooserType = Chooser.FOLDER_CHOOSER,
+            useNightTheme = swUseNightTheme.isChecked)
             .start()
     }
 }

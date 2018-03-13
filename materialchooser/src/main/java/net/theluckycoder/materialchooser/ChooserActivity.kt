@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -45,7 +46,13 @@ class ChooserActivity : AppCompatActivity() {
     private var mCurrentDir = File(mRootDirPath)
     private var mFileExtension = ""
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        if (intent.getBooleanExtra(Chooser.USE_NIGHT_THEME, false)) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chooser)
 

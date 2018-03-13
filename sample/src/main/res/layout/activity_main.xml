@@ -13,6 +13,13 @@
         android:text="Show hidden files"
         android:textSize="17sp" />
 
+    <Switch
+        android:id="@+id/sw_night_theme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Use Night Mode"
+        android:textSize="17sp" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

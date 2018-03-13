@@ -10,6 +10,7 @@ class Chooser @JvmOverloads constructor(private val activity: Activity,
         private var startPath: String = rootPath,
         private var fileExtension: String = "",
         private var showHiddenFiles: Boolean = false,
+        private var useNightTheme: Boolean = false,
         @ChooserType private var chooserType: Int = FILE_CHOOSER) {
 
     companion object Constants {
@@ -18,6 +19,7 @@ class Chooser @JvmOverloads constructor(private val activity: Activity,
         internal const val START_DIR_PATH = "startDirPath"
         internal const val FILE_EXTENSION = "fileExtension"
         internal const val SHOW_HIDDEN_FILES = "showHiddenFiles"
+        internal const val USE_NIGHT_THEME = "useNightTheme"
 
         const val RESULT_PATH = "resultPath"
 
@@ -81,14 +83,24 @@ class Chooser @JvmOverloads constructor(private val activity: Activity,
     }
 
     /**
-     * Start the chooser activity
+     * Set the Theme to Night mode
+     *
+     * @param useNightTheme enable night theme
+     * *    Default: false
      */
+    fun setNightTheme(useNightTheme: Boolean): Chooser {
+        this.useNightTheme = useNightTheme
+        return this
+    }
+
+    /** Start the chooser activity */
     fun start() {
         Intent(activity, ChooserActivity::class.java).apply {
             putExtra(ROOT_DIR_PATH, rootPath)
             putExtra(START_DIR_PATH, startPath)
             putExtra(FILE_EXTENSION, fileExtension)
             putExtra(SHOW_HIDDEN_FILES, showHiddenFiles)
+            putExtra(USE_NIGHT_THEME, useNightTheme)
             putExtra(CHOOSER_TYPE, chooserType)
         }.run {
             activity.startActivityForResult(this, requestCode)

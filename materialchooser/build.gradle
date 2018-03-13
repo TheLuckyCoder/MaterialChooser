@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'org.jetbrains.dokka-android'
 apply plugin: 'maven-publish'
 
-ext.libVersion = "1.1.4"
+ext.libVersion = "1.1.5"
 
 android {
     compileSdkVersion 27
@@ -11,7 +11,7 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 4
+        versionCode 5
         versionName libVersion
         vectorDrawables.useSupportLibrary = true
     }

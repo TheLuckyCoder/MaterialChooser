@@ -12,7 +12,7 @@ You will need Android Studio 3.0 or newer to build this project.
 **Using Gradle**
 ```gradle
 dependencies {
-    compile 'net.theluckycoder.materialchooser:materialchooser:1.1.4'
+    compile 'net.theluckycoder.materialchooser:materialchooser:1.1.5'
 }
 ```
 
@@ -22,7 +22,7 @@ dependencies {
 <dependency>
   <groupId>net.theluckycoder.materialchooser</groupId>
   <artifactId>materialchooser</artifactId>
-  <version>1.1.4</version>
+  <version>1.1.5</version>
   <type>pom</type>
 </dependency>
 ```
@@ -85,7 +85,7 @@ If you want to change any color of the File Chooser, just redefine one of these 
 or you can directly override the theme
 ```xml
 <!-- Default Theme -->
-<style name="FileChooserTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+<style name="FileChooserTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
     <item name="colorPrimary">@color/colorPrimary</item>
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     <item name="colorAccent">@color/colorAccent</item>
