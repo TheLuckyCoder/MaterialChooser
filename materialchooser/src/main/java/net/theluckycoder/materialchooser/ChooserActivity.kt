@@ -8,11 +8,13 @@ import android.os.Environment
 import android.support.annotation.RestrictTo
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
@@ -23,6 +25,9 @@ import java.util.ArrayList
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ChooserActivity : AppCompatActivity() {
 
+    private val mSwipeRefreshLayout by lazy(LazyThreadSafetyMode.NONE) {
+        findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
+    }
     private val mItemList = ArrayList<FileItem>()
     private val mAdapter by lazy(LazyThreadSafetyMode.NONE) {
         FilesAdapter(mItemList, { item ->
@@ -70,6 +75,9 @@ class ChooserActivity : AppCompatActivity() {
         mCurrentDir.mkdirs()
         updateAdapter()
 
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent)
+        mSwipeRefreshLayout.setOnRefreshListener { updateAdapter() }
+
         checkForStoragePermission()
     }
 
@@ -83,12 +91,24 @@ class ChooserActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_chooser, menu)
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            onBackPressed()
-            return true
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            R.id.menu_chooser_refresh -> {
+                mSwipeRefreshLayout.isRefreshing = true
+                updateAdapter()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
@@ -110,17 +130,18 @@ class ChooserActivity : AppCompatActivity() {
 
         if (mCurrentDir.absolutePath != mRootDirPath) {
             val parentFolder = mCurrentDir.parent ?: mRootDirPath
-            mItemList.add(0, FileItem(getString(R.string.file_chooser_parent_directory),
+            mItemList.add(0, FileItem(getString(R.string.chooser_parent_directory),
                 parentFolder, true, true))
         }
 
         mAdapter.notifyDataSetChanged()
+        mSwipeRefreshLayout.isRefreshing = false
     }
 
     private fun getListedFiles(): List<FileItem> {
         val listedFilesArray: Array<File>? = mCurrentDir.listFiles()
         title = mCurrentDir.absolutePath.replace(Environment.getExternalStorageDirectory().absolutePath,
-            getString(R.string.file_chooser_device))
+            getString(R.string.chooser_device))
 
         val dirsList = ArrayList<FileItem>()
         val filesList = ArrayList<FileItem>()
@@ -128,7 +149,8 @@ class ChooserActivity : AppCompatActivity() {
         if (listedFilesArray == null || listedFilesArray.isEmpty()) return dirsList
 
         listedFilesArray.forEach {
-            if (!it.canRead() || !mShowHiddenFiles && it.name.startsWith(".")) return@forEach
+            if (!it.canRead() || (!mShowHiddenFiles && it.name.startsWith("."))) return@forEach
+
             when {
                 it.isDirectory -> dirsList.add(FileItem(it.name, it.absolutePath, true))
                 mFileExtension.isEmpty() -> filesList.add(FileItem(it.name, it.absolutePath, false))
@@ -156,11 +178,11 @@ class ChooserActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) return
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-            Toast.makeText(this, R.string.file_chooser_permission_required_desc, Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.chooser_permission_required_desc, Toast.LENGTH_LONG).show()
         } else {
             AlertDialog.Builder(this)
-                .setTitle(R.string.file_chooser_permission_required)
-                .setMessage(R.string.file_chooser_permission_required_desc)
+                .setTitle(R.string.chooser_permission_required)
+                .setMessage(R.string.chooser_permission_required_desc)
                 .setCancelable(false)
                 .setIcon(R.drawable.ic_folder)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
