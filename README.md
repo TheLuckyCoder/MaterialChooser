@@ -12,7 +12,7 @@ You will need Android Studio 3.0 or newer to build this project.
 **Using Gradle**
 ```gradle
 dependencies {
-    compile 'net.theluckycoder.materialchooser:materialchooser:1.1.5'
+    compile 'net.theluckycoder.materialchooser:materialchooser:1.2.0'
 }
 ```
 
@@ -22,7 +22,7 @@ dependencies {
 <dependency>
   <groupId>net.theluckycoder.materialchooser</groupId>
   <artifactId>materialchooser</artifactId>
-  <version>1.1.5</version>
+  <version>1.2.0</version>
   <type>pom</type>
 </dependency>
 ```
@@ -95,7 +95,7 @@ or you can directly override the theme
 ## License
 
 ```
-Copyright 2017-2018 TheLuckyCoder
+Copyright 2018 TheLuckyCoder
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

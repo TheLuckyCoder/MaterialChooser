@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
 import net.theluckycoder.materialchooser.Chooser
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvResultPath: TextView
     private lateinit var swShowHiddenFiles: Switch
     private lateinit var swUseNightTheme: Switch
+    private lateinit var etFileExtension: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         tvResultPath = findViewById(R.id.tv_result_path)
         swShowHiddenFiles = findViewById(R.id.sw_hidden_files)
         swUseNightTheme = findViewById(R.id.sw_night_theme)
+        etFileExtension = findViewById(R.id.et_file_extension)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -42,17 +45,16 @@ class MainActivity : AppCompatActivity() {
         Chooser(this,
             requestCode = REQUEST_CODE,
             showHiddenFiles = swShowHiddenFiles.isChecked,
-            fileExtension = "txt",
+            fileExtension = etFileExtension.text?.toString().orEmpty(),
             useNightTheme = swUseNightTheme.isChecked)
             .start()
     }
 
     fun startFolderChooser(@Suppress("UNUSED_PARAMETER") view: View) {
-        Chooser(this,
-            requestCode = REQUEST_CODE,
-            showHiddenFiles = swShowHiddenFiles.isChecked,
-            chooserType = Chooser.FOLDER_CHOOSER,
-            useNightTheme = swUseNightTheme.isChecked)
+        Chooser(this, REQUEST_CODE)
+            .setShowHiddenFiles(swShowHiddenFiles.isChecked)
+            .setChooserType(Chooser.FOLDER_CHOOSER)
+            .setNightTheme(swUseNightTheme.isChecked)
             .start()
     }
 }

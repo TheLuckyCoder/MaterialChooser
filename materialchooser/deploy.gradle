@@ -35,7 +35,7 @@ install {
     }
 }
 
-if (project.hasProperty("kotlin")) { //Kotlin libraries
+if (project.hasProperty("kotlin")) { // Kotlin libraries
     task sourcesJar(type: Jar) {
         classifier = 'sources'
         from android.sourceSets.main.java.srcDirs

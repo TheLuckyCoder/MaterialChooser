@@ -24,21 +24,21 @@ import java.io.File
 import java.util.ArrayList
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class ChooserActivity : AppCompatActivity() {
+internal class ChooserActivity : AppCompatActivity() {
 
     private val mSwipeRefreshLayout by lazy(LazyThreadSafetyMode.NONE) {
         findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
     }
     private val mItemList = ArrayList<FileItem>()
     private val mAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        FilesAdapter(mItemList, { item ->
+        FilesAdapter(mItemList) { item ->
             if (item.isFolder) {
                 mCurrentDir = File(item.path)
                 updateAdapter()
             } else {
                 finishWithResult(item.path)
             }
-        })
+        }
     }
     private var mShowHiddenFiles = false
     private var mIsFileChooser = true
@@ -47,7 +47,11 @@ class ChooserActivity : AppCompatActivity() {
     private var mFileExtension = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (intent.getBooleanExtra(Chooser.USE_NIGHT_THEME, false)) {
+        val extra = intent.extras ?: run {
+            finish()
+            return
+        }
+        if (extra.getBoolean(Chooser.USE_NIGHT_THEME, false)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -63,12 +67,12 @@ class ChooserActivity : AppCompatActivity() {
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = mAdapter
 
-        mRootDirPath = intent.getStringExtra(Chooser.ROOT_DIR_PATH) ?: mRootDirPath
-        val startPath = intent.getStringExtra(Chooser.START_DIR_PATH) ?: mRootDirPath
+        mRootDirPath = extra.getString(Chooser.ROOT_DIR_PATH, mRootDirPath)
+        val startPath = extra.getString(Chooser.START_DIR_PATH, mRootDirPath)
         if (startPath != mRootDirPath) mCurrentDir = File(startPath)
-        mFileExtension = intent.getStringExtra(Chooser.FILE_EXTENSION) ?: ""
-        mShowHiddenFiles = intent.getBooleanExtra(Chooser.SHOW_HIDDEN_FILES, false)
-        mIsFileChooser = intent.getIntExtra(Chooser.CHOOSER_TYPE, 0) == 0
+        mFileExtension = extra.getString(Chooser.FILE_EXTENSION, "")
+        mShowHiddenFiles = extra.getBoolean(Chooser.SHOW_HIDDEN_FILES, false)
+        mIsFileChooser = extra.getInt(Chooser.CHOOSER_TYPE) == 0
 
         if (!mIsFileChooser) {
             val selectFolderBtn: Button = findViewById(R.id.btn_select_folder)
@@ -79,13 +83,22 @@ class ChooserActivity : AppCompatActivity() {
             }
         }
 
+        savedInstanceState?.let {
+            val file = it.getSerializable("current_dir")
+            if (file is File) mCurrentDir = file
+        }
+
         mCurrentDir.mkdirs()
-        updateAdapter()
 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent)
         mSwipeRefreshLayout.setOnRefreshListener { updateAdapter() }
 
         checkForStoragePermission()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateAdapter()
     }
 
     override fun onBackPressed() {
@@ -96,6 +109,11 @@ class ChooserActivity : AppCompatActivity() {
             setResult(RESULT_CANCELED)
             finish()
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable("current_dir", mCurrentDir)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -110,7 +128,6 @@ class ChooserActivity : AppCompatActivity() {
                 true
             }
             R.id.menu_chooser_refresh -> {
-                mSwipeRefreshLayout.isRefreshing = true
                 updateAdapter()
                 true
             }
@@ -118,9 +135,8 @@ class ChooserActivity : AppCompatActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
-        if (requestCode == 100) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode == 1) {
             if (grantResults.size < 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 Log.e("Storage Permission", "Permission not granted")
                 finish()
@@ -132,6 +148,7 @@ class ChooserActivity : AppCompatActivity() {
     }
 
     private fun updateAdapter() {
+        mSwipeRefreshLayout.isRefreshing = true
         mItemList.clear()
         mItemList.addAll(getListedFiles())
 
@@ -150,33 +167,28 @@ class ChooserActivity : AppCompatActivity() {
         title = mCurrentDir.absolutePath.replace(Environment.getExternalStorageDirectory().absolutePath,
             getString(R.string.chooser_device))
 
-        val dirsList = ArrayList<FileItem>()
-        val filesList = ArrayList<FileItem>()
+        val itemList = ArrayList<FileItem>()
 
-        if (listedFilesArray == null || listedFilesArray.isEmpty()) return dirsList
-
-        listedFilesArray.forEach {
-            if (!it.canRead() || (!mShowHiddenFiles && it.name.startsWith("."))) return@forEach
-
-            when {
-                it.isDirectory -> dirsList.add(FileItem(it.name, it.absolutePath, true))
-                mFileExtension.isEmpty() -> filesList.add(FileItem(it.name, it.absolutePath, false))
-                it.extension == mFileExtension -> filesList.add(FileItem(it.name, it.absolutePath, false))
+        listedFilesArray?.forEach {
+            if (it.canRead() && (mShowHiddenFiles == it.name.startsWith("."))) {
+                when {
+                    it.isDirectory -> itemList.add(FileItem(it.name, it.absolutePath, true))
+                    mIsFileChooser && (mFileExtension.isEmpty() || it.extension == mFileExtension) ->
+                        itemList.add(FileItem(it.name, it.absolutePath, false))
+                }
             }
         }
 
+        itemList.sort()
 
-        if (mIsFileChooser) dirsList.addAll(filesList)
-        dirsList.sort()
-
-        return dirsList
+        return itemList
     }
 
     private fun finishWithResult(path: String) {
-        val intent = Intent().apply {
+        Intent().apply {
             putExtra(Chooser.RESULT_PATH, path)
+            setResult(RESULT_OK, this)
         }
-        setResult(RESULT_OK, intent)
         finish()
     }
 
@@ -193,7 +205,7 @@ class ChooserActivity : AppCompatActivity() {
                 .setCancelable(false)
                 .setIcon(R.drawable.ic_folder)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
-                    ActivityCompat.requestPermissions(this, arrayOf(permission), 100)
+                    ActivityCompat.requestPermissions(this, arrayOf(permission), 1)
                 }.show()
         }
     }

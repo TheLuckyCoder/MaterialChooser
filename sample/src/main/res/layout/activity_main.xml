@@ -20,6 +20,19 @@
         android:text="Use Night Mode"
         android:textSize="17sp" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="File Extension:" />
+
+    <EditText
+        android:id="@+id/et_file_extension"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="txt"
+        android:textSize="17sp" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

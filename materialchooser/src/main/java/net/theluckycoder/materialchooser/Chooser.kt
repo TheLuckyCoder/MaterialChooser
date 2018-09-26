@@ -4,14 +4,16 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Environment
 
-class Chooser @JvmOverloads constructor(private val activity: Activity,
-        private val requestCode: Int,
-        private var rootPath: String = Environment.getExternalStorageDirectory().absolutePath,
-        private var startPath: String = rootPath,
-        private var fileExtension: String = "",
-        private var showHiddenFiles: Boolean = false,
-        private var useNightTheme: Boolean = false,
-        @ChooserType private var chooserType: Int = FILE_CHOOSER) {
+class Chooser @JvmOverloads constructor(
+    private val activity: Activity,
+    private val requestCode: Int,
+    private var rootPath: String = Environment.getExternalStorageDirectory().absolutePath,
+    private var startPath: String? = null,
+    private var fileExtension: String? = null,
+    private var showHiddenFiles: Boolean = false,
+    private var useNightTheme: Boolean = false,
+    @ChooserType private var chooserType: Int = FILE_CHOOSER
+) {
 
     companion object Constants {
         internal const val CHOOSER_TYPE = "chooserType"
@@ -55,7 +57,7 @@ class Chooser @JvmOverloads constructor(private val activity: Activity,
      * @param startPath where the user starts
      * *    Default: Root Path
      */
-    fun setStartPath(startPath: String): Chooser {
+    fun setStartPath(startPath: String?): Chooser {
         this.startPath = startPath
         return this
     }
@@ -66,7 +68,7 @@ class Chooser @JvmOverloads constructor(private val activity: Activity,
      * @param extension file extension in string format
      * *    Example: "txt"
      */
-    fun setFileExtension(extension: String): Chooser {
+    fun setFileExtension(extension: String?): Chooser {
         fileExtension = extension
         return this
     }

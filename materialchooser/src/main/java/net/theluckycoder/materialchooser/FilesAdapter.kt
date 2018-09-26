@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 
-internal class FilesAdapter(private val list: List<FileItem>,
-        private val onFileClick: (item: FileItem) -> Unit
+internal class FilesAdapter(
+    private val list: List<FileItem>,
+    private val onItemClick: (item: FileItem) -> Unit
 ) : RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
 
     init { setHasStableIds(true) }
@@ -24,7 +25,7 @@ internal class FilesAdapter(private val list: List<FileItem>,
         holder.itemView.setOnClickListener {
             val pos = holder.adapterPosition
 
-            if (pos != RecyclerView.NO_POSITION) onFileClick(list[pos])
+            if (pos != RecyclerView.NO_POSITION) onItemClick(list[pos])
         }
 
         return holder
@@ -43,7 +44,7 @@ internal class FilesAdapter(private val list: List<FileItem>,
         viewHolder.ivIcon.setImageResource(drawable)
     }
 
-    internal class ViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
+    internal class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvName: TextView = view.findViewById(R.id.tv_name)
         val ivIcon: ImageView = view.findViewById(R.id.iv_icon)
     }
