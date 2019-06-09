@@ -31,9 +31,9 @@ internal class FilesAdapter(
         val item = list[position]
 
         val drawable = when {
-            item.isParent -> R.drawable.ic_up
-            item.isFolder -> R.drawable.ic_folder
-            else -> R.drawable.ic_file
+            item.isParent -> R.drawable.ic_chooser_up
+            item.isFolder -> R.drawable.ic_chooser_folder
+            else -> R.drawable.ic_chooser_file
         }
 
         viewHolder.tvName.text = item.name

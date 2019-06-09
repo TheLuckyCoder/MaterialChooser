@@ -214,7 +214,7 @@ internal class ChooserActivity : AppCompatActivity() {
                 .setTitle(R.string.chooser_permission_required)
                 .setMessage(R.string.chooser_permission_required_desc)
                 .setCancelable(false)
-                .setIcon(R.drawable.ic_folder)
+                .setIcon(R.drawable.ic_chooser_folder)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
                     ActivityCompat.requestPermissions(this, arrayOf(permission), 1)
                 }.show()
