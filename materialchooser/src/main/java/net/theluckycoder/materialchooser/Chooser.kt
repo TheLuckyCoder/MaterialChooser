@@ -69,7 +69,7 @@ class Chooser @JvmOverloads constructor(
      * *    Example: "txt"
      */
     fun setFileExtension(extension: String?): Chooser {
-        fileExtension = extension
+        fileExtension = extension?.removePrefix(".")
         return this
     }
 

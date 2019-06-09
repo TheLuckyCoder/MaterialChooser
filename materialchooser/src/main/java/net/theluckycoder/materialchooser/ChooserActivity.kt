@@ -149,16 +149,24 @@ internal class ChooserActivity : AppCompatActivity() {
 
     private fun updateAdapter() {
         mSwipeRefreshLayout.isRefreshing = true
+        val lastSize = mItemList.size
         mItemList.clear()
+        mAdapter.notifyItemRangeRemoved(0, lastSize)
+
         mItemList.addAll(getListedFiles())
 
         if (mCurrentDir.absolutePath != mRootDirPath) {
             val parentFolder = mCurrentDir.parent ?: mRootDirPath
-            mItemList.add(0, FileItem(getString(R.string.chooser_parent_directory),
-                parentFolder, true, true))
+
+            mItemList.add(0, FileItem(
+                name = getString(R.string.chooser_parent_directory),
+                path = parentFolder,
+                isFolder = true,
+                isParent = true)
+            )
         }
 
-        mAdapter.notifyDataSetChanged()
+        mAdapter.notifyItemRangeInserted(0, mItemList.size)
         mSwipeRefreshLayout.isRefreshing = false
     }
 
@@ -167,17 +175,20 @@ internal class ChooserActivity : AppCompatActivity() {
         title = mCurrentDir.absolutePath.replace(Environment.getExternalStorageDirectory().absolutePath,
             getString(R.string.chooser_device))
 
-        val itemList = ArrayList<FileItem>()
+        listedFilesArray ?: return emptyList()
 
-        listedFilesArray?.forEach {
-            if (it.canRead() && (mShowHiddenFiles == it.name.startsWith("."))) {
-                when {
-                    it.isDirectory -> itemList.add(FileItem(it.name, it.absolutePath, true))
-                    mIsFileChooser && (mFileExtension.isEmpty() || it.extension == mFileExtension) ->
-                        itemList.add(FileItem(it.name, it.absolutePath, false))
+        val itemList = ArrayList<FileItem>(listedFilesArray.size)
+
+        listedFilesArray.asSequence()
+            .filter { it.canRead() }
+            .filter { mShowHiddenFiles || !it.name.startsWith(".") }
+            .forEach {
+                if (it.isDirectory) {
+                    itemList.add(FileItem(it.name, it.absolutePath, true))
+                } else if (mIsFileChooser && (mFileExtension.isEmpty() || it.extension == mFileExtension)) {
+                    itemList.add(FileItem(it.name, it.absolutePath, false))
                 }
             }
-        }
 
         itemList.sort()
 

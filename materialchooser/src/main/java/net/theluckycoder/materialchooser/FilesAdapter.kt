@@ -12,10 +12,6 @@ internal class FilesAdapter(
     private val onItemClick: (item: FileItem) -> Unit
 ) : RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
 
-    init { setHasStableIds(true) }
-
-    override fun getItemId(position: Int) = list[position].hashCode().toLong()
-
     override fun getItemCount() = list.size
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
@@ -31,7 +27,7 @@ internal class FilesAdapter(
         return holder
     }
 
-    override fun onBindViewHolder(viewHolder: FilesAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val item = list[position]
 
         val drawable = when {
