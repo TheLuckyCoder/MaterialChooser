@@ -2,11 +2,11 @@ package net.theluckycoder.filechooserexample
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import net.theluckycoder.materialchooser.Chooser
 
 class MainActivity : AppCompatActivity() {
@@ -46,8 +46,8 @@ class MainActivity : AppCompatActivity() {
             requestCode = REQUEST_CODE,
             showHiddenFiles = swShowHiddenFiles.isChecked,
             fileExtension = etFileExtension.text?.toString().orEmpty(),
-            useNightTheme = swUseNightTheme.isChecked)
-            .start()
+            useNightTheme = swUseNightTheme.isChecked
+        ).start()
     }
 
     fun startFolderChooser(@Suppress("UNUSED_PARAMETER") view: View) {

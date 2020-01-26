@@ -4,6 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Environment
 
+/**
+ * File/Folder Chooser Builder
+ */
 class Chooser @JvmOverloads constructor(
     private val activity: Activity,
     private val requestCode: Int,
@@ -16,14 +19,9 @@ class Chooser @JvmOverloads constructor(
 ) {
 
     companion object Constants {
-        internal const val CHOOSER_TYPE = "chooserType"
-        internal const val ROOT_DIR_PATH = "rootDirPath"
-        internal const val START_DIR_PATH = "startDirPath"
-        internal const val FILE_EXTENSION = "fileExtension"
-        internal const val SHOW_HIDDEN_FILES = "showHiddenFiles"
-        internal const val USE_NIGHT_THEME = "useNightTheme"
+        internal const val ARG_CHOOSER_PARAMS = "chooser_params"
 
-        const val RESULT_PATH = "resultPath"
+        const val RESULT_PATH = "result_path"
 
         const val FILE_CHOOSER = 0
         const val FOLDER_CHOOSER = 1
@@ -97,15 +95,20 @@ class Chooser @JvmOverloads constructor(
 
     /** Start the chooser activity */
     fun start() {
-        Intent(activity, ChooserActivity::class.java).apply {
-            putExtra(ROOT_DIR_PATH, rootPath)
-            putExtra(START_DIR_PATH, startPath)
-            putExtra(FILE_EXTENSION, fileExtension)
-            putExtra(SHOW_HIDDEN_FILES, showHiddenFiles)
-            putExtra(USE_NIGHT_THEME, useNightTheme)
-            putExtra(CHOOSER_TYPE, chooserType)
-        }.run {
-            activity.startActivityForResult(this, requestCode)
-        }
+        // TODO
+        val extension = fileExtension
+        val params = ChooserParams(
+            rootPath,
+            startPath,
+            if (extension == null) null else arrayOf(extension),
+            showHiddenFiles,
+            useNightTheme,
+            chooserType == FILE_CHOOSER
+        )
+
+        val intent = Intent(activity, ChooserActivity::class.java)
+        intent.putExtra(ARG_CHOOSER_PARAMS, params)
+
+        activity.startActivityForResult(intent, requestCode)
     }
 }
