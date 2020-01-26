@@ -3,15 +3,15 @@ apply plugin: 'kotlin-android'
 apply plugin: 'org.jetbrains.dokka-android'
 apply plugin: 'maven-publish'
 
-ext.libVersionCode = 121
-ext.libVersion = "1.2.1"
+ext.libVersionCode = 122
+ext.libVersion = "1.2.2"
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode libVersionCode
         versionName libVersion
         vectorDrawables.useSupportLibrary = true
@@ -31,8 +31,9 @@ dokka {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 }
 
 apply from: 'deploy.gradle'
