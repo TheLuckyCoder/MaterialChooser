@@ -5,14 +5,14 @@
 
 A lightweight Material-Designed File and Folder Chooser Library for Android written in Kotlin.
 
-You will need Android Studio 3.0 or newer to build this project.
+You will need Android Studio 3.5 or newer to build this project.
 
 ## Including it in your Project
 
 **Using Gradle**
 ```gradle
 dependencies {
-    compile 'net.theluckycoder.materialchooser:materialchooser:1.2.0'
+    implementation 'net.theluckycoder.materialchooser:materialchooser:1.2.2'
 }
 ```
 
@@ -22,7 +22,7 @@ dependencies {
 <dependency>
   <groupId>net.theluckycoder.materialchooser</groupId>
   <artifactId>materialchooser</artifactId>
-  <version>1.2.0</version>
+  <version>1.2.2</version>
   <type>pom</type>
 </dependency>
 ```
@@ -42,7 +42,7 @@ Or you can just use the default parameters
 Chooser(this, 10,
     startPath = Environment.getExternalStorageDirectory().absolutePath + "/Android/",
     showHiddenFiles = true,
-    fileExtension = "txt")
+    fileExtensions = listOf("txt)")
     .start()
 ```
 
@@ -70,7 +70,7 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 
 ## Documentation
 
-You can find all the usable methods documented [here](https://github.com/TheLuckyCoder/MaterialChooser/blob/kotlin/filechooser/src/main/java/net/theluckycoder/filechooser/Chooser.kt)
+You can find all the usable methods documented [here](https://github.com/TheLuckyCoder/MaterialChooser/blob/master/materialchooser/src/main/java/net/theluckycoder/materialchooser/Chooser.kt)
 
 ## Customize
 
@@ -95,7 +95,7 @@ or you can directly override the theme
 ## License
 
 ```
-Copyright 2018 TheLuckyCoder
+Copyright 2018-2020 TheLuckyCoder
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
