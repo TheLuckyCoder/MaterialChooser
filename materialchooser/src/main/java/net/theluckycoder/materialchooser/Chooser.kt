@@ -42,9 +42,7 @@ class Chooser @JvmOverloads constructor(
     companion object Constants {
         internal const val ARG_CHOOSER_PARAMS = "chooser_params"
 
-        const val DEFAULT_RESULT_CODE = 12345
         const val RESULT_PATH = "result_path"
-
 
         const val FILE_CHOOSER = 0
         const val FOLDER_CHOOSER = 1
@@ -102,17 +100,26 @@ class Chooser @JvmOverloads constructor(
      *
      * * These will be simply ignored if the chooserType is equal to FOLDER_CHOOSER
      *
-     * @param fileExtensions
+     * @param extensions a list containing the file extensions
      * *    Example: ["txt", ".zip"]
+     * *    Default: null
      */
-    fun setFileExtensions(fileExtensions: List<String>?): Chooser {
-        if (fileExtensions == null) {
-            this.fileExtensions = null
-        } else {
-            this.fileExtensions = fileExtensions
-                .filter { it.isNotBlank() }
-                .map { it.removePrefix(".") }
-        }
+    fun setFileExtensions(extensions: List<String>?): Chooser {
+        fileExtensions = extensions
+            ?.filter { it.isNotBlank() }
+            ?.map { it.removePrefix(".") }
+
+        return this
+    }
+
+    /**
+     *
+     * @see setFileExtensions
+     */
+    fun setFileExtensions(vararg extensions: String): Chooser {
+        fileExtensions = extensions
+            .filter { it.isNotBlank() }
+            .map { it.removePrefix(".") }
 
         return this
     }
