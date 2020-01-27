@@ -6,7 +6,7 @@ import android.os.Parcelable
 internal class ChooserParams(
     val rootPath: String,
     val startPath: String?,
-    val fileExtensions: Array<String>?,
+    val fileExtensions: List<String>?,
     val showHiddenFiles: Boolean,
     val useNightTheme: Boolean,
     val isFileChooser: Boolean
@@ -15,7 +15,7 @@ internal class ChooserParams(
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
         parcel.readString(),
-        parcel.createStringArray(),
+        parcel.createStringArrayList(),
         parcel.readByte() != 0.toByte(),
         parcel.readByte() != 0.toByte(),
         parcel.readByte() != 0.toByte()
@@ -24,7 +24,7 @@ internal class ChooserParams(
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(rootPath)
         parcel.writeString(startPath)
-        parcel.writeStringArray(fileExtensions)
+        parcel.writeStringList(fileExtensions)
         parcel.writeByte(if (showHiddenFiles) 1 else 0)
         parcel.writeByte(if (useNightTheme) 1 else 0)
         parcel.writeByte(if (isFileChooser) 1 else 0)

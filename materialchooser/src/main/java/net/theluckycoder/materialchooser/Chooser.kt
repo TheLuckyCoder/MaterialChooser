@@ -12,16 +12,39 @@ class Chooser @JvmOverloads constructor(
     private val requestCode: Int,
     private var rootPath: String = Environment.getExternalStorageDirectory().absolutePath,
     private var startPath: String? = null,
-    private var fileExtension: String? = null,
+    private var fileExtensions: List<String>? = null,
     private var showHiddenFiles: Boolean = false,
     private var useNightTheme: Boolean = false,
     @ChooserType private var chooserType: Int = FILE_CHOOSER
 ) {
 
+    @Deprecated("Use the new constructor")
+    constructor(
+        activity: Activity,
+        requestCode: Int,
+        rootPath: String,
+        startPath: String?,
+        fileExtension: String?,
+        showHiddenFiles: Boolean,
+        useNightTheme: Boolean,
+        @ChooserType chooserType: Int
+    ) : this(
+        activity,
+        requestCode,
+        rootPath,
+        startPath,
+        if (fileExtension != null) listOf(fileExtension) else null,
+        showHiddenFiles,
+        useNightTheme,
+        chooserType
+    )
+
     companion object Constants {
         internal const val ARG_CHOOSER_PARAMS = "chooser_params"
 
+        const val DEFAULT_RESULT_CODE = 12345
         const val RESULT_PATH = "result_path"
+
 
         const val FILE_CHOOSER = 0
         const val FOLDER_CHOOSER = 1
@@ -42,7 +65,7 @@ class Chooser @JvmOverloads constructor(
      * Set the root directory of the picker
      *
      * @param rootPath the user can't go any higher than this
-     * *      Default: External Storage
+     * *    Default: External Storage
      */
     fun setRootPath(rootPath: String): Chooser {
         this.rootPath = rootPath
@@ -66,8 +89,31 @@ class Chooser @JvmOverloads constructor(
      * @param extension file extension in string format
      * *    Example: "txt"
      */
+    @Deprecated("Multiple File Extensions are now supported",
+        replaceWith = ReplaceWith("setFileExtensions(arrayOf(extension))"))
     fun setFileExtension(extension: String?): Chooser {
-        fileExtension = extension?.removePrefix(".")
+        val fileExtension = extension?.removePrefix(".")
+        fileExtensions = if (fileExtension != null) listOf(fileExtension) else null
+        return this
+    }
+
+    /**
+     * Only files with these extensions will be displayed
+     *
+     * * These will be simply ignored if the chooserType is equal to FOLDER_CHOOSER
+     *
+     * @param fileExtensions
+     * *    Example: ["txt", ".zip"]
+     */
+    fun setFileExtensions(fileExtensions: List<String>?): Chooser {
+        if (fileExtensions == null) {
+            this.fileExtensions = null
+        } else {
+            this.fileExtensions = fileExtensions
+                .filter { it.isNotBlank() }
+                .map { it.removePrefix(".") }
+        }
+
         return this
     }
 
@@ -93,14 +139,15 @@ class Chooser @JvmOverloads constructor(
         return this
     }
 
-    /** Start the chooser activity */
+    /**
+     *  Start the chooser activity
+     */
     fun start() {
-        // TODO
-        val extension = fileExtension
+        val extension = fileExtensions
         val params = ChooserParams(
             rootPath,
             startPath,
-            if (extension == null) null else arrayOf(extension),
+            extension,
             showHiddenFiles,
             useNightTheme,
             chooserType == FILE_CHOOSER

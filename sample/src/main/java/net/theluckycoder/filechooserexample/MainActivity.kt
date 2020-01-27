@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         Chooser(this,
             requestCode = REQUEST_CODE,
             showHiddenFiles = swShowHiddenFiles.isChecked,
-            fileExtension = etFileExtension.text?.toString().orEmpty(),
+            fileExtensions = listOf(etFileExtension.text?.toString().orEmpty()),
             useNightTheme = swUseNightTheme.isChecked
         ).start()
     }
