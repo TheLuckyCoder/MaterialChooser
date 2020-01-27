@@ -8,7 +8,7 @@ internal class ChooserParams(
     val startPath: String?,
     val fileExtensions: List<String>?,
     val showHiddenFiles: Boolean,
-    val useNightTheme: Boolean,
+    val nightMode: Int,
     val isFileChooser: Boolean
 ) : Parcelable {
 
@@ -17,7 +17,7 @@ internal class ChooserParams(
         parcel.readString(),
         parcel.createStringArrayList(),
         parcel.readByte() != 0.toByte(),
-        parcel.readByte() != 0.toByte(),
+        parcel.readInt(),
         parcel.readByte() != 0.toByte()
     )
 
@@ -26,7 +26,7 @@ internal class ChooserParams(
         parcel.writeString(startPath)
         parcel.writeStringList(fileExtensions)
         parcel.writeByte(if (showHiddenFiles) 1 else 0)
-        parcel.writeByte(if (useNightTheme) 1 else 0)
+        parcel.writeInt(nightMode)
         parcel.writeByte(if (isFileChooser) 1 else 0)
     }
 

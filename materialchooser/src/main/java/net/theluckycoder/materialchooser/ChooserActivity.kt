@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.annotation.RestrictTo
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,11 +46,7 @@ internal class ChooserActivity : AppCompatActivity() {
         params = intent.getParcelableExtra(Chooser.ARG_CHOOSER_PARAMS)
             ?: throw IllegalArgumentException("No Chooser Parameters found")
 
-        if (params.useNightTheme) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }
+        delegate.localNightMode = params.nightMode
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chooser)
@@ -70,7 +65,7 @@ internal class ChooserActivity : AppCompatActivity() {
 
             selectFolderBtn.visibility = View.VISIBLE
             selectFolderBtn.setOnClickListener {
-                finishWithResult(currentDir.absolutePath + "/")
+                finishWithResult(currentDir.absolutePath + '/')
             }
         }
 

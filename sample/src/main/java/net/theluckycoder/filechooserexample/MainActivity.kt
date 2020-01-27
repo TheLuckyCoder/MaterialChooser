@@ -6,7 +6,9 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import net.theluckycoder.materialchooser.Chooser
 
 class MainActivity : AppCompatActivity() {
@@ -42,11 +44,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun startFileChooser(@Suppress("UNUSED_PARAMETER") view: View) {
+        val nightMode = if (swUseNightTheme.isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
         Chooser(this,
             requestCode = REQUEST_CODE,
             showHiddenFiles = swShowHiddenFiles.isChecked,
             fileExtensions = listOf(etFileExtension.text?.toString().orEmpty()),
-            useNightTheme = swUseNightTheme.isChecked
+            nightMode = nightMode
         ).start()
     }
 

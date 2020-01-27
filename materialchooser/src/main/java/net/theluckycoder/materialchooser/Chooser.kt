@@ -3,6 +3,7 @@ package net.theluckycoder.materialchooser
 import android.app.Activity
 import android.content.Intent
 import android.os.Environment
+import androidx.appcompat.app.AppCompatDelegate
 
 /**
  * File/Folder Chooser Builder
@@ -14,7 +15,7 @@ class Chooser @JvmOverloads constructor(
     private var startPath: String? = null,
     private var fileExtensions: List<String>? = null,
     private var showHiddenFiles: Boolean = false,
-    private var useNightTheme: Boolean = false,
+    @AppCompatDelegate.NightMode private var nightMode: Int = AppCompatDelegate.MODE_NIGHT_UNSPECIFIED,
     @ChooserType private var chooserType: Int = FILE_CHOOSER
 ) {
 
@@ -35,7 +36,7 @@ class Chooser @JvmOverloads constructor(
         startPath,
         if (fileExtension != null) listOf(fileExtension) else null,
         showHiddenFiles,
-        useNightTheme,
+        if (useNightTheme) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO,
         chooserType
     )
 
@@ -87,8 +88,10 @@ class Chooser @JvmOverloads constructor(
      * @param extension file extension in string format
      * *    Example: "txt"
      */
-    @Deprecated("Multiple File Extensions are now supported",
-        replaceWith = ReplaceWith("setFileExtensions(arrayOf(extension))"))
+    @Deprecated(
+        "Multiple File Extensions are now supported",
+        replaceWith = ReplaceWith("setFileExtensions(arrayOf(extension))")
+    )
     fun setFileExtension(extension: String?): Chooser {
         val fileExtension = extension?.removePrefix(".")
         fileExtensions = if (fileExtension != null) listOf(fileExtension) else null
@@ -136,13 +139,34 @@ class Chooser @JvmOverloads constructor(
     }
 
     /**
-     * Set the Theme to Night mode
+     * Enable or disable Night Theme
      *
      * @param useNightTheme enable night theme
      * *    Default: false
      */
+    @Deprecated(
+        "More explicit night mode settings are available",
+        replaceWith = ReplaceWith(
+            "setNightMode(if (useNightTheme) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)",
+            "androidx.appcompat.app.AppCompatDelegate"
+        )
+    )
     fun setNightTheme(useNightTheme: Boolean): Chooser {
-        this.useNightTheme = useNightTheme
+        nightMode = if (useNightTheme) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+        return this
+    }
+
+    /**
+     * Set Night Mode to be used by AppCompatDelegate
+     *
+     * @param nightMode
+     * *    Default: AppCompatDelegate.MODE_NIGHT_UNSPECIFIED
+     *
+     * @see androidx.appcompat.app.AppCompatDelegate.setLocalNightMode
+     * @see androidx.appcompat.app.AppCompatDelegate.NightMode
+     */
+    fun setNightMode(@AppCompatDelegate.NightMode nightMode: Int): Chooser {
+        this.nightMode = nightMode
         return this
     }
 
@@ -150,13 +174,17 @@ class Chooser @JvmOverloads constructor(
      *  Start the chooser activity
      */
     fun start() {
-        val extension = fileExtensions
+        check(
+            nightMode in AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM..AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY ||
+                nightMode == AppCompatDelegate.MODE_NIGHT_UNSPECIFIED
+        ) { "Invalid night mode: $nightMode" }
+
         val params = ChooserParams(
             rootPath,
             startPath,
-            extension,
+            fileExtensions,
             showHiddenFiles,
-            useNightTheme,
+            nightMode,
             chooserType == FILE_CHOOSER
         )
 
