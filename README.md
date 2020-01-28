@@ -42,8 +42,8 @@ Or you can just use the default parameters
 Chooser(this, 10,
     startPath = Environment.getExternalStorageDirectory().absolutePath + "/Android/",
     showHiddenFiles = true,
-    fileExtensions = listOf("txt)")
-    .start()
+    fileExtensions = listOf("txt")
+).start()
 ```
 
 #### Open Folder Picker:
@@ -62,8 +62,8 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
     data ?: return
 
     if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-        val filePath = data.getStringExtra(Chooser.RESULT_PATH)
-        filePathTxt.text = filePath
+        val path = data.getStringExtra(Chooser.RESULT_PATH)
+        // Do what you wish with this path
     }
 }
 ```

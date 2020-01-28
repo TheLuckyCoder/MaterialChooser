@@ -1,7 +1,14 @@
 # Change log
 
+## Version 1.2.2
+- Allow multiple file extensions filtering
+- Allow more specific Night Mode options
+- The library will no longer set the  Night Mode for the whole app
+- Change Compile API Version to 29 (no support for MediaStore yet)
+- Switch to AndroidX
+
 ## Version 1.2.1
-- Fix Show Hidden Files optiom not working properly
+- Fix Show Hidden Files option not working properly
 - Fix a potential bug with the file extension filtering
 
 ## Version 1.2.0

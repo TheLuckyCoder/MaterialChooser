@@ -143,6 +143,7 @@ class Chooser @JvmOverloads constructor(
      *
      * @param useNightTheme enable night theme
      * *    Default: false
+     * @see setNightMode
      */
     @Deprecated(
         "More explicit night mode settings are available",
@@ -171,9 +172,10 @@ class Chooser @JvmOverloads constructor(
     }
 
     /**
-     *  Start the chooser activity
+     * Start the chooser activity
      */
     fun start() {
+        // Make sure the Night Mode value is valid
         check(
             nightMode in AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM..AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY ||
                 nightMode == AppCompatDelegate.MODE_NIGHT_UNSPECIFIED

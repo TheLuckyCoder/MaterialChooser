@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         Chooser(this, REQUEST_CODE)
             .setShowHiddenFiles(swShowHiddenFiles.isChecked)
             .setChooserType(Chooser.FOLDER_CHOOSER)
-            .setNightTheme(swUseNightTheme.isChecked)
+            .setNightMode(if (swUseNightTheme.isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
             .start()
     }
 }
