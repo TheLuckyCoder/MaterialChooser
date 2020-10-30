@@ -3,6 +3,7 @@ package net.theluckycoder.materialchooser
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
@@ -46,7 +47,9 @@ internal class ChooserActivity : AppCompatActivity() {
         params = intent.getParcelableExtra(Chooser.ARG_CHOOSER_PARAMS)
             ?: throw IllegalArgumentException("No Chooser Parameters found")
 
-        delegate.localNightMode = params.nightMode
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            delegate.localNightMode = params.nightMode
+        }
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chooser)
@@ -58,7 +61,7 @@ internal class ChooserActivity : AppCompatActivity() {
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = filesAdapter
 
-        currentDir = File(params.rootPath)
+        currentDir = File(params.startPath ?: params.rootPath)
 
         if (!params.isFileChooser) {
             val selectFolderBtn: Button = findViewById(R.id.btn_select_folder)
@@ -167,6 +170,7 @@ internal class ChooserActivity : AppCompatActivity() {
             .filter { it.canRead() }
             .filter { params.showHiddenFiles || !it.name.startsWith(".") }
             .filter { params.isFileChooser || it.isDirectory }
+            .toList()
 
         if (params.isFileChooser) {
             val extensions = params.fileExtensions

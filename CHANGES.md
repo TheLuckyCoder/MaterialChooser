@@ -1,4 +1,7 @@
 # Change log
+## Version 1.2.3
+- Change Compile SDK 30 and Target SDK to 29
+- Update AndroidX libraries to latest version
 
 ## Version 1.2.2
 - Allow multiple file extensions filtering

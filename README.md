@@ -12,7 +12,7 @@ You will need Android Studio 3.5 or newer to build this project.
 **Using Gradle**
 ```gradle
 dependencies {
-    implementation 'net.theluckycoder.materialchooser:materialchooser:1.2.2'
+    implementation 'net.theluckycoder.materialchooser:materialchooser:1.2.3'
 }
 ```
 
@@ -22,7 +22,7 @@ dependencies {
 <dependency>
   <groupId>net.theluckycoder.materialchooser</groupId>
   <artifactId>materialchooser</artifactId>
-  <version>1.2.2</version>
+  <version>1.2.3</version>
   <type>pom</type>
 </dependency>
 ```

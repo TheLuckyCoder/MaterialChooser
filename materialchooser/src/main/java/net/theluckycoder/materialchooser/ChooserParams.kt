@@ -22,12 +22,14 @@ internal class ChooserParams(
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(rootPath)
-        parcel.writeString(startPath)
-        parcel.writeStringList(fileExtensions)
-        parcel.writeByte(if (showHiddenFiles) 1 else 0)
-        parcel.writeInt(nightMode)
-        parcel.writeByte(if (isFileChooser) 1 else 0)
+        with(parcel) {
+            writeString(rootPath)
+            writeString(startPath)
+            writeStringList(fileExtensions)
+            writeByte(if (showHiddenFiles) 1 else 0)
+            writeInt(nightMode)
+            writeByte(if (isFileChooser) 1 else 0)
+        }
     }
 
     override fun describeContents(): Int = 0
